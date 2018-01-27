@@ -6,6 +6,7 @@ import com.transmission.trans_mission.contract.RenderCallback;
 import com.transmission.trans_mission.gui.components.TileAnimation;
 import com.transmission.trans_mission.gui.containers.Tile;
 import com.transmission.trans_mission.gui.containers.TileSet;
+import com.transmission.trans_mission.gui.manager.FlipManager;
 import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -21,16 +22,14 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private Point2D pos;
     private boolean moving;
     private Point2D target;
-    private Point2D oldPos;
-    private boolean hasMoved;
     private Double angle;
-    private boolean flipTile;
+    private FlipManager flipManager;
 
     public CharacterContainer(TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
         this.velocity = velocity;
         this.pos = pos;
-        this.hasMoved = true;
+        this.flipManager = new FlipManager(tileSet.getTile(0).getWidth());
 
         animation = new TileAnimation(Duration.millis(500), 3);
         animation.setCycleCount(Animation.INDEFINITE);
@@ -40,15 +39,19 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     public void gameLogic(double delta) {
         if (isMoving()) {
             animation.play();
-            Point2D posOffset = new Point2D(pos.getX() + getCurrentTile().getWidth() / 2,
-                    pos.getY() + getCurrentTile().getHeight() / 2);
-            if (posOffset.distance(target) < 0.5) {
+            Point2D posOffset;
+            if (flipManager.isFlipped()) {
+                posOffset = new Point2D(pos.getX() - getCurrentTile().getWidth() / 2,
+                        pos.getY() + getCurrentTile().getHeight() / 2);
+            } else {
+                posOffset = new Point2D(pos.getX() + getCurrentTile().getWidth() / 2,
+                        pos.getY() + getCurrentTile().getHeight() / 2);
+            }
+            if (posOffset.distance(target) < 1.5) {
                 setMoving(false);
             } else {
-                hasMoved = true;
                 angle = calculateAngle(posOffset, target);
-                oldPos = pos;
-                pos = new Point2D(pos.getX() + ((velocity * Math.cos(angle)) * delta),
+                pos = new Point2D((pos.getX() + flipManager.getHorizontalOffset()) + ((velocity * Math.cos(angle)) * delta),
                         pos.getY() + ((velocity * Math.sin(angle)) * delta));
             }
         } else {
@@ -74,20 +77,18 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     @Override
     public void render(DrawTileCallback gc) {
-        if (hasMoved) {
-            hasMoved = false;
             Tile currentTile = getCurrentTile();
-            Point2D size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
-            if (oldPos != null) {
-                gc.draw(null, oldPos, size);
+        Point2D size;
+        if (flipManager.isFlipped()) {
+            size = new Point2D(-currentTile.getWidth(), currentTile.getHeight());
+        } else {
+            size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
             }
             gc.draw(currentTile.getImage(), pos, size);
-        }
     }
 
     private Tile getCurrentTile() {
         MovementDirection dir = getCurrentDirection();
-        flipTile(false);
         switch (dir) {
             case NORTH:
                 animation.setOffset(6);
@@ -96,10 +97,15 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
                 animation.setOffset(3);
                 break;
             case EAST:
-                flipTile(true);
+                if (!flipManager.isFlipped()) {
+                    flipManager.setShouldFlip(true);
+                }
                 animation.setOffset(0);
                 break;
             case WEST:
+                if (flipManager.isFlipped()) {
+                    flipManager.setShouldFlip(true);
+                }
                 animation.setOffset(0);
                 break;
             case NORTH_EAST:
@@ -118,10 +124,6 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
         return tileSet.getTile(animation.getLastIndex());
     }
 
-    private void flipTile(boolean b) {
-        flipTile = b;
-    }
-
     public void characterMove(MouseEvent keyEvent) {
         setMoving(true);
         target = new Point2D(keyEvent.getX(), keyEvent.getY());
@@ -133,10 +135,6 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
-    }
-
-    public void stopMovement() {
-        setMoving(false);
     }
 
     private MovementDirection getCurrentDirection() {

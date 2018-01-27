@@ -46,7 +46,7 @@ public class MainController implements Initializable, DrawCallback {
                                 if (gc != null) {
                                     if (image == null) {
                                         gc.setFill(Color.DARKBLUE);
-                                        gc.fillRect(pos.getX(), pos.getY(), size.getX(), size.getY());
+                                        gc.fillRect(0, 0, pane.getWidth(), pane.getHeight());
                                     } else {
                                         gc.drawImage(image, pos.getX(), pos.getY(), size.getX(), size.getY());
                                     }

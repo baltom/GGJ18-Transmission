@@ -60,6 +60,7 @@ public class GameLoopManager {
     }
 
     private void render(DrawTileCallback callback) {
+        callback.draw(null, null, null);
         renderItems.forEach(render -> render.render(callback));
     }
 
