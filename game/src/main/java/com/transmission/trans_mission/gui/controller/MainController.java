@@ -13,6 +13,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -142,6 +143,9 @@ public class MainController implements Initializable, DrawCallback {
             gc.strokeLine(square.getPoint(2).getX(), square.getPoint(2).getY(), square.getPoint(3).getX(), square.getPoint(3).getY());
             gc.strokeLine(square.getPoint(3).getX(), square.getPoint(3).getY(), square.getPoint(0).getX(), square.getPoint(0).getY());
 
+        } else if (drawable.getItem() instanceof Point2D) {
+            gc.setFill(Color.RED);
+            gc.fillOval(((Point2D) drawable.getItem()).getX(), ((Point2D) drawable.getItem()).getY(), drawable.getSize().getX(), drawable.getSize().getY());
         }
     }
 

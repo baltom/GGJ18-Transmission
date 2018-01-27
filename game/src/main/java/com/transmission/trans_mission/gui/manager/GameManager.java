@@ -3,7 +3,6 @@ package com.transmission.trans_mission.gui.manager;
 import com.transmission.trans_mission.character.CharacterContainer;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
@@ -42,6 +41,7 @@ public class GameManager {
         gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground10x").setScale(1.));
 
         character = new CharacterContainer(tileManager.getTileSet("character"), 2., new Point2D(400, 600));
+        gameLoopManager.setCharacter(character);
 
         gameLoopManager.addGameLogicItem(character);
         gameLoopManager.addRenderItem(character);
@@ -87,10 +87,6 @@ public class GameManager {
     }
 
     public void mouseMoved(MouseEvent mouseEvent, Scene scene) {
-        if (gameLoopManager.getBoundsMap().isWithinBounds((int) mouseEvent.getX(), (int) mouseEvent.getY())) {
-            scene.setCursor(Cursor.HAND);
-        } else {
-            scene.setCursor(Cursor.CLOSED_HAND);
-        }
+
     }
 }
