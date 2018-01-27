@@ -1,0 +1,3 @@
+*.iml
+game/.idea/**
+*.DS_Store
