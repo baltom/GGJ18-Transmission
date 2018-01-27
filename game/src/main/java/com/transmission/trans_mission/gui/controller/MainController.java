@@ -4,6 +4,7 @@ import com.transmission.trans_mission.contract.DrawCallback;
 import com.transmission.trans_mission.contract.Drawable;
 import com.transmission.trans_mission.gui.components.ResizableCanvas;
 import com.transmission.trans_mission.gui.containers.Dialog;
+import com.transmission.trans_mission.gui.containers.MenuItem;
 import com.transmission.trans_mission.gui.manager.GameManager;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -16,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +37,7 @@ public class MainController implements Initializable, DrawCallback {
 
         cnvMain.widthProperty().bind(pane.widthProperty());
         cnvMain.heightProperty().bind(pane.heightProperty());
+        cnvMain.setId("canvas");
 
         pane.widthProperty().addListener((e) -> updateSize());
         pane.heightProperty().addListener((e) -> updateSize());
@@ -74,7 +77,11 @@ public class MainController implements Initializable, DrawCallback {
             gc.setFill(Color.DARKBLUE);
             gc.fillRect(0, 0, pane.getWidth(), pane.getHeight());
         } else if (drawable.getItem() instanceof Image) {
-            gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), drawable.getSize().getX(), drawable.getSize().getY());
+            if (drawable.getSize() == null) {
+                gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), cnvMain.getWidth(), cnvMain.getHeight());
+            } else {
+                gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), drawable.getSize().getX(), drawable.getSize().getY());
+            }
         } else if (drawable.getItem() instanceof Dialog) {
             Dialog dialog = (Dialog) drawable.getItem();
 
@@ -97,6 +104,28 @@ public class MainController implements Initializable, DrawCallback {
             gc.fillText(dialog.getText(),
                     dialog.getPos().getX() + dialog.getSize().getX() / 2 - (dialog.getText()).length(),
                     dialog.getPos().getY() + dialog.getSize().getY() / 2);
+        } else if (drawable.getItem() instanceof MenuItem) {
+            MenuItem menu = (MenuItem) drawable.getItem();
+
+            gc.setFill(menu.getBackgroundColor());
+            gc.fillRect(menu.getPos().getX(), menu.getPos().getY(), menu.getSize().getX(), menu.getSize().getY());
+
+
+            Font font = new Font("Comic Sans MS", 22.);
+            gc.setFill(Color.BLACK);
+            gc.setFont(font);
+
+            final Text text = new Text(menu.getText());
+            text.setFont(font);
+
+            final double width = text.getLayoutBounds().getWidth();
+
+            gc.fillText(menu.getText(),
+                    menu.getPos().getX() + menu.getSize().getX() / 2 - (width / 2),
+                    menu.getPos().getY() + menu.getSize().getY() / 2);
+
+            gc.setStroke(menu.getBorderColor());
+            gc.strokeRect(menu.getPos().getX(), menu.getPos().getY(), menu.getSize().getX(), menu.getSize().getY());
         }
     }
 

@@ -68,4 +68,9 @@ public class TileSet {
     public int getTileCount() {
         return tiles.size();
     }
+
+    public TileSet setScale(double v) {
+        tiles.forEach(t -> t.setScale(v));
+        return this;
+    }
 }

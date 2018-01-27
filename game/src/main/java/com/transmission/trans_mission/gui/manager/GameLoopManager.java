@@ -84,4 +84,8 @@ public class GameLoopManager {
     private void doGameUpdates(double delta) {
         gameLogic.forEach(logic -> setDoARender(logic.gameLogic(delta)));
     }
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
 }
