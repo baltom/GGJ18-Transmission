@@ -1,6 +1,7 @@
 package com.transmission.trans_mission.gui.manager;
 
 import com.google.gson.Gson;
+import com.transmission.trans_mission.character.CharacterContainer;
 import com.transmission.trans_mission.container.BoundsMap;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.contract.GameLogicCallback;
@@ -32,7 +33,8 @@ public class GameLoopManager {
     private boolean hasDoneInitialRender = false;
     private List<TileSet> backgroundTiles;
     private HashMap<Integer, BoundsMap> boundsHashMap;
-    private boolean drawBoundsMap = false;
+    private boolean drawBoundsMap = true;
+    private CharacterContainer character;
 
     public GameLoopManager(DialogManager dialogManager) {
         renderItems = new ArrayList<>();
@@ -143,5 +145,10 @@ public class GameLoopManager {
 
     public BoundsMap getBoundsMap() {
         return boundsHashMap.get(0);
+    }
+
+    public void setCharacter(CharacterContainer character) {
+        this.character = character;
+        character.setBoundsMap(boundsHashMap.get(0));
     }
 }

@@ -1,6 +1,7 @@
 package com.transmission.trans_mission.character;
 
 import com.transmission.trans_mission.container.BoundsMap;
+import com.transmission.trans_mission.container.Pos;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.contract.GameLogicCallback;
 import com.transmission.trans_mission.contract.RenderCallback;
@@ -14,6 +15,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static com.transmission.trans_mission.character.MovementDirection.*;
 
 public class CharacterContainer implements GameLogicCallback, RenderCallback {
@@ -26,6 +31,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private Point2D target;
     private Double angle;
     private FlipManager flipManager;
+    private List<Point2D> allowedPoints;
+    private BoundsMap boundsMap;
 
     public CharacterContainer(TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
@@ -44,10 +51,10 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
             Point2D posOffset;
             if (flipManager.isFlipped()) {
                 posOffset = new Point2D(pos.getX() - getCurrentTile().getWidth() / 2,
-                        pos.getY() + getCurrentTile().getHeight() / 2);
+                        pos.getY() + getCurrentTile().getHeight() / 2 + 40);
             } else {
                 posOffset = new Point2D(pos.getX() + getCurrentTile().getWidth() / 2,
-                        pos.getY() + getCurrentTile().getHeight() / 2);
+                        pos.getY() + getCurrentTile().getHeight() / 2 + 40);
             }
             if (posOffset.distance(target) < 1.5) {
                 setMoving(false);
@@ -132,6 +139,47 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
         if (isWithinAllowedBounds(keyEvent.getX(), keyEvent.getY(), map)) {
             setMoving(true);
             target = new Point2D(keyEvent.getX(), keyEvent.getY());
+        } else {
+            setMoving(true);
+            target = findClosestPoint(keyEvent.getX(), keyEvent.getY());
+        }
+    }
+
+    private Point2D findClosestPoint(double x, double y) {
+        final double[] shortestDistance = {-1};
+        Point2D target = new Point2D(x, y);
+        AtomicReference<Point2D> foundPoint = new AtomicReference<>();
+        allowedPoints.forEach(p -> {
+            double distance = p.distance(target);
+            if (shortestDistance[0] == -1 || distance < shortestDistance[0]) {
+                shortestDistance[0] = distance;
+                foundPoint.set(p);
+            }
+        });
+        return foundPoint.get();
+    }
+
+    public void setBoundsMap(BoundsMap boundsMap) {
+        this.boundsMap = boundsMap;
+        this.allowedPoints = new ArrayList<>();
+        calculateClosestPoints();
+    }
+
+    private void calculateClosestPoints() {
+        Pos[] pos = {boundsMap.getBottomLeft(), boundsMap.getBottomRight(), boundsMap.getTopRight(), boundsMap.getTopLeft()};
+        for (int i = 0; i < pos.length; i++) {
+            int nextPos = i >= pos.length - 1 ? 0 : i + 1;
+            Point2D start = new Point2D(pos[i].getX(), pos[i].getY());
+            Point2D goal = new Point2D(pos[nextPos].getX(), pos[nextPos].getY());
+            Point2D current = new Point2D(start.getX(), start.getY());
+            double speed = 20;
+            do {
+                Double angle = calculateAngle(current, goal);
+
+                current = new Point2D(current.getX() + speed * Math.cos(angle),
+                        current.getY() + speed * Math.sin(angle));
+                allowedPoints.add(current);
+            } while (goal.distance(current) > 10);
         }
     }
 
