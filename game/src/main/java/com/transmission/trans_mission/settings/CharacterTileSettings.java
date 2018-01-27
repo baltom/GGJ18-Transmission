@@ -20,6 +20,13 @@ public class CharacterTileSettings implements TileMapSettings {
         this.height = 56.;
     }
 
+    public CharacterTileSettings(String s, double width, double height) {
+        this.name = s;
+        this.padding = 0.;
+        this.width = width;
+        this.height = height;
+    }
+
     @Override
     public String name() {
         return name;

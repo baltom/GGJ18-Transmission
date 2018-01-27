@@ -28,6 +28,7 @@ public class TileManager {
 
     public void loadAllTiles() {
         loadTileMap(new CharacterTileSettings("character.png"));
+        loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
     }
 
     public Tile getActiveTile() {
