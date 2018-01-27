@@ -29,8 +29,8 @@ public class TileManager {
     public void loadAllTiles() {
         loadTileMap(new CharacterTileSettings("character.png"));
         loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
-        loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot.png", 64., 36.));
-        loadTileMap(new CharacterTileSettings("TransSiberian_Train_MainMenu.png", 64., 36.));
+        loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot10x.png", 64. * 10, 36. * 10));
+        loadTileMap(new CharacterTileSettings("TransSiberian_Train10x.png", 64. * 10, 38. * 10));
     }
 
     public Tile getActiveTile() {
