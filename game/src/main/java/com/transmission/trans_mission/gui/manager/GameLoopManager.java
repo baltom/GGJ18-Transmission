@@ -9,15 +9,19 @@ import java.util.List;
 
 public class GameLoopManager {
 
+    private final DialogManager dialogManager;
     private List<RenderCallback> renderItems;
     private List<GameLogicCallback> gameLogic;
     private boolean gameRunning;
     private long lastFpsTime;
     private int fps;
+    private boolean doARender;
+    private boolean hasDoneInitialRender = false;
 
-    public GameLoopManager() {
+    public GameLoopManager(DialogManager dialogManager) {
         renderItems = new ArrayList<>();
         gameLogic = new ArrayList<>();
+        this.dialogManager = dialogManager;
     }
 
     public void addRenderItem(RenderCallback item) {
@@ -60,11 +64,24 @@ public class GameLoopManager {
     }
 
     private void render(DrawTileCallback callback) {
-        callback.draw(null, null, null);
-        renderItems.forEach(render -> render.render(callback));
+        if (doARender || !hasDoneInitialRender) {
+            hasDoneInitialRender = true;
+            doARender = false;
+            callback.draw(null);
+            renderItems.forEach(render -> render.render(callback));
+            if (dialogManager.shouldDrawDialog()) {
+                callback.draw(dialogManager.getDialog());
+            }
+        }
+    }
+
+    public void setDoARender(boolean doARender) {
+        if (doARender) {
+            this.doARender = true;
+        }
     }
 
     private void doGameUpdates(double delta) {
-        gameLogic.forEach(logic -> logic.gameLogic(delta));
+        gameLogic.forEach(logic -> setDoARender(logic.gameLogic(delta)));
     }
 }

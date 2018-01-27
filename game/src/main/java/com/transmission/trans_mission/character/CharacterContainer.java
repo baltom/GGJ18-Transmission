@@ -5,6 +5,7 @@ import com.transmission.trans_mission.contract.GameLogicCallback;
 import com.transmission.trans_mission.contract.RenderCallback;
 import com.transmission.trans_mission.gui.components.TileAnimation;
 import com.transmission.trans_mission.gui.containers.Tile;
+import com.transmission.trans_mission.gui.containers.TileDrawable;
 import com.transmission.trans_mission.gui.containers.TileSet;
 import com.transmission.trans_mission.gui.manager.FlipManager;
 import javafx.animation.Animation;
@@ -36,7 +37,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     }
 
     @Override
-    public void gameLogic(double delta) {
+    public boolean gameLogic(double delta) {
         if (isMoving()) {
             animation.play();
             Point2D posOffset;
@@ -54,9 +55,11 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
                 pos = new Point2D((pos.getX() + flipManager.getHorizontalOffset()) + ((velocity * Math.cos(angle)) * delta),
                         pos.getY() + ((velocity * Math.sin(angle)) * delta));
             }
+            return true;
         } else {
             animation.pause();
         }
+        return false;
     }
 
     private Double calculateAngle(Point2D source, Point2D target) {
@@ -84,7 +87,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
         } else {
             size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
             }
-            gc.draw(currentTile.getImage(), pos, size);
+        gc.draw(new TileDrawable(size, pos, currentTile.getImage()));
     }
 
     private Tile getCurrentTile() {

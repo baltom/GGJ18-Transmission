@@ -3,6 +3,7 @@ package com.transmission.trans_mission.gui.manager;
 import com.transmission.trans_mission.character.CharacterContainer;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 
 public class GameManager {
@@ -10,13 +11,15 @@ public class GameManager {
     private CharacterContainer character;
     private GameLoopManager gameLoopManager;
     private TileManager tileManager;
+    private DialogManager dialogManager;
 
-    public GameManager() {
+    public GameManager(Canvas parent) {
         tileManager = new TileManager();
         tileManager.setTileScale(2.);
         tileManager.loadAllTiles();
+        dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
 
-        gameLoopManager = new GameLoopManager();
+        gameLoopManager = new GameLoopManager(dialogManager);
 
         character = new CharacterContainer(tileManager.getTileSet("character"), 1.5, new Point2D(0, 0));
 
@@ -34,5 +37,9 @@ public class GameManager {
 
     public void clickOnScreen(MouseEvent mouseEvent) {
         character.characterMove(mouseEvent);
+    }
+
+    public void updateSize(Canvas pane) {
+        dialogManager.initDialogSize(pane);
     }
 }
