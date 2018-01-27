@@ -5,12 +5,14 @@ import com.transmission.trans_mission.contract.Drawable;
 import com.transmission.trans_mission.gui.components.ResizableCanvas;
 import com.transmission.trans_mission.gui.containers.Dialog;
 import com.transmission.trans_mission.gui.containers.MenuItem;
+import com.transmission.trans_mission.gui.containers.Square;
 import com.transmission.trans_mission.gui.manager.GameManager;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -18,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.apache.commons.lang.WordUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +33,7 @@ public class MainController implements Initializable, DrawCallback {
 
     private GameManager gameManager;
     private Scene scene;
+    private Font FONT = new Font("Comic Sans MS", 22.);
 
     public void initialize(URL location, ResourceBundle resources) {
         cnvMain = new ResizableCanvas(this);
@@ -66,6 +70,7 @@ public class MainController implements Initializable, DrawCallback {
         service.start();
 
         cnvMain.setOnMouseClicked(gameManager::clickOnScreen);
+        cnvMain.setOnMouseMoved(e -> gameManager.mouseMoved(e, scene));
     }
 
     private void updateSize() {
@@ -100,10 +105,20 @@ public class MainController implements Initializable, DrawCallback {
 
             // Dialog text
             gc.setFill(Color.WHITE);
-            gc.setFont(new Font("Comic Sans MS", 22.));
-            gc.fillText(dialog.getText(),
-                    dialog.getPos().getX() + dialog.getSize().getX() / 2 - (dialog.getText()).length(),
-                    dialog.getPos().getY() + dialog.getSize().getY() / 2);
+            gc.setFont(FONT);
+            String text = dialog.getText();
+            int wrapLength = 100;
+            Bounds size = getSize(text);
+            do {
+                text = WordUtils.wrap(dialog.getText(), wrapLength);
+                size = getSize(text);
+                System.out.println(size.getWidth() + 350 + " - " + cnvMain.getWidth());
+                wrapLength -= 5;
+                if (wrapLength < 0) break;
+            } while (size.getWidth() + 350 >= cnvMain.getWidth());
+            gc.fillText(text,
+                    dialog.getSize().getY() + 50,
+                    dialog.getPos().getY() + 50);
         } else if (drawable.getItem() instanceof MenuItem) {
             MenuItem menu = (MenuItem) drawable.getItem();
 
@@ -111,22 +126,30 @@ public class MainController implements Initializable, DrawCallback {
             gc.fillRect(menu.getPos().getX(), menu.getPos().getY(), menu.getSize().getX(), menu.getSize().getY());
 
 
-            Font font = new Font("Comic Sans MS", 22.);
             gc.setFill(Color.BLACK);
-            gc.setFont(font);
-
-            final Text text = new Text(menu.getText());
-            text.setFont(font);
-
-            final double width = text.getLayoutBounds().getWidth();
-
+            gc.setFont(FONT);
             gc.fillText(menu.getText(),
-                    menu.getPos().getX() + menu.getSize().getX() / 2 - (width / 2),
+                    menu.getPos().getX() + menu.getSize().getX() / 2 - (getSize(menu.getText()).getWidth() / 2),
                     menu.getPos().getY() + menu.getSize().getY() / 2);
 
             gc.setStroke(menu.getBorderColor());
             gc.strokeRect(menu.getPos().getX(), menu.getPos().getY(), menu.getSize().getX(), menu.getSize().getY());
+        } else if (drawable.getItem() instanceof Square) {
+            Square square = (Square) drawable.getItem();
+            gc.setStroke(Color.RED);
+            gc.strokeLine(square.getPoint(0).getX(), square.getPoint(0).getY(), square.getPoint(1).getX(), square.getPoint(1).getY());
+            gc.strokeLine(square.getPoint(1).getX(), square.getPoint(1).getY(), square.getPoint(2).getX(), square.getPoint(2).getY());
+            gc.strokeLine(square.getPoint(2).getX(), square.getPoint(2).getY(), square.getPoint(3).getX(), square.getPoint(3).getY());
+            gc.strokeLine(square.getPoint(3).getX(), square.getPoint(3).getY(), square.getPoint(0).getX(), square.getPoint(0).getY());
+
         }
+    }
+
+    private Bounds getSize(String text) {
+        final Text element = new Text(text);
+        element.setFont(FONT);
+
+        return element.getLayoutBounds();
     }
 
     @Override

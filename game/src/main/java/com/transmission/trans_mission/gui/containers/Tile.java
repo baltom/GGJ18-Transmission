@@ -19,6 +19,11 @@ public class Tile {
         image = resample(newImage, tileScale);
     }
 
+    public Tile(Image newImage, Double tileScale) {
+        scale = tileScale;
+        image = resample(newImage, tileScale);
+    }
+
     private Image resample(Image input, Double scaleFactor) {
         final int W = (int) input.getWidth();
         final int H = (int) input.getHeight();

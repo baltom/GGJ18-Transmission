@@ -16,22 +16,26 @@ public class TileSet {
     public TileSet(TileMapSettings settings, Double tileScale) {
         tiles = new ArrayList<>();
         Image image = new Image(getClass().getResourceAsStream("/" + settings.name()));
-        PixelReader reader = image.getPixelReader();
+        if (settings.getEntireSheet()) {
+            tiles.add(new Tile(image, tileScale));
+        } else {
+            PixelReader reader = image.getPixelReader();
 
-        int maxVert = (int) (image.getHeight() / (settings.getHeight() + settings.getPadding() * 2));
-        int maxHor = (int) (image.getWidth() / (settings.getWidth()) + settings.getPadding() * 2);
+            int maxVert = (int) (image.getHeight() / (settings.getHeight() + settings.getPadding() * 2));
+            int maxHor = (int) (image.getWidth() / (settings.getWidth()) + settings.getPadding() * 2);
 
-        for (int vertical = 0; vertical < maxVert; vertical++) {
-            Double y = vertical * settings.getHeight();
-            for (int horizontal = 0; horizontal < maxHor; horizontal++) {
-                try {
-                    Double x = horizontal * settings.getWidth();
-                    WritableImage newImage = new WritableImage(reader, x.intValue(), y.intValue(), (int) settings.getWidth(), (int) settings.getHeight());
-                    if (!isBlankImage(newImage)) {
-                        tiles.add(new Tile(newImage, tileScale));
+            for (int vertical = 0; vertical < maxVert; vertical++) {
+                Double y = vertical * settings.getHeight();
+                for (int horizontal = 0; horizontal < maxHor; horizontal++) {
+                    try {
+                        Double x = horizontal * settings.getWidth();
+                        WritableImage newImage = new WritableImage(reader, x.intValue(), y.intValue(), (int) settings.getWidth(), (int) settings.getHeight());
+                        if (!isBlankImage(newImage)) {
+                            tiles.add(new Tile(newImage, tileScale));
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Woot");
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Woot");
                 }
             }
         }

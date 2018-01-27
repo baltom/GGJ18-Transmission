@@ -7,6 +7,8 @@ import com.transmission.trans_mission.settings.CharacterTileSettings;
 
 import java.util.HashMap;
 
+import static com.transmission.trans_mission.gui.manager.GameManager.*;
+
 public class TileManager {
 
     private HashMap<String, TileSet> tileSets;
@@ -26,11 +28,18 @@ public class TileManager {
         return tileSets.get(name);
     }
 
-    public void loadAllTiles() {
-        loadTileMap(new CharacterTileSettings("character.png"));
-        loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
-        loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot10x.png", 64. * 10, 36. * 10));
-        loadTileMap(new CharacterTileSettings("TransSiberian_Train10x.png", 64. * 10, 38. * 10));
+    public void loadAllTiles(int START_STEP) {
+        switch (START_STEP) {
+            case CUTSCENE_START:
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot10x.png", 64. * 10, 36. * 10));
+            case MAIN_MENU_START:
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train10x.png", 64. * 10, 38. * 10));
+            case GAME_START:
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior10x.png", true));
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground10x.png", true));
+                loadTileMap(new CharacterTileSettings("character.png"));
+                loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
+        }
     }
 
     public Tile getActiveTile() {

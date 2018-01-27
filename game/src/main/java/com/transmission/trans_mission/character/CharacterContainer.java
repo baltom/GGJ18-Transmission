@@ -1,5 +1,6 @@
 package com.transmission.trans_mission.character;
 
+import com.transmission.trans_mission.container.BoundsMap;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.contract.GameLogicCallback;
 import com.transmission.trans_mission.contract.RenderCallback;
@@ -127,9 +128,15 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
         return tileSet.getTile(animation.getLastIndex());
     }
 
-    public void characterMove(MouseEvent keyEvent) {
-        setMoving(true);
-        target = new Point2D(keyEvent.getX(), keyEvent.getY());
+    public void characterMove(MouseEvent keyEvent, BoundsMap map) {
+        if (isWithinAllowedBounds(keyEvent.getX(), keyEvent.getY(), map)) {
+            setMoving(true);
+            target = new Point2D(keyEvent.getX(), keyEvent.getY());
+        }
+    }
+
+    private boolean isWithinAllowedBounds(double x, double y, BoundsMap map) {
+        return map.isWithinBounds((int) x, (int) y);
     }
 
     public boolean isMoving() {
