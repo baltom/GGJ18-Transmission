@@ -1,6 +1,8 @@
 package com.transmission.trans_mission.gui.containers;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
 public class Tile {
@@ -14,7 +16,34 @@ public class Tile {
 
     public Tile(WritableImage newImage, Double tileScale) {
         scale = tileScale;
-        image = newImage;
+        image = resample(newImage, tileScale);
+    }
+
+    private Image resample(Image input, Double scaleFactor) {
+        final int W = (int) input.getWidth();
+        final int H = (int) input.getHeight();
+        final Double S = scaleFactor;
+
+        WritableImage output = new WritableImage(
+                W * S.intValue(),
+                H * S.intValue()
+        );
+
+        PixelReader reader = input.getPixelReader();
+        PixelWriter writer = output.getPixelWriter();
+
+        for (int y = 0; y < H; y++) {
+            for (int x = 0; x < W; x++) {
+                final int argb = reader.getArgb(x, y);
+                for (int dy = 0; dy < S; dy++) {
+                    for (int dx = 0; dx < S; dx++) {
+                        writer.setArgb((int) (x * S + dx), (int) (y * S + dy), argb);
+                    }
+                }
+            }
+        }
+
+        return output;
     }
 
     public Image getImage() {
@@ -26,18 +55,15 @@ public class Tile {
     }
 
     public Double getWidth() {
-        return image.getWidth() * getScale();
+        return image.getWidth();
     }
 
     public Double getHeight() {
-        return image.getHeight() * getScale();
-    }
-
-    public Double getScale() {
-        return scale;
+        return image.getHeight();
     }
 
     public void setScale(Double scale) {
         this.scale = scale;
+        this.image = resample(this.image, scale);
     }
 }

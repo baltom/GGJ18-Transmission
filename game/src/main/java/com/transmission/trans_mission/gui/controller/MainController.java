@@ -35,6 +35,7 @@ public class MainController implements Initializable, DrawCallback {
 
         cnvMain.widthProperty().bind(pane.widthProperty());
         cnvMain.heightProperty().bind(pane.heightProperty());
+        cnvMain.setId("canvas");
 
         pane.widthProperty().addListener((e) -> updateSize());
         pane.heightProperty().addListener((e) -> updateSize());
@@ -74,7 +75,11 @@ public class MainController implements Initializable, DrawCallback {
             gc.setFill(Color.DARKBLUE);
             gc.fillRect(0, 0, pane.getWidth(), pane.getHeight());
         } else if (drawable.getItem() instanceof Image) {
-            gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), drawable.getSize().getX(), drawable.getSize().getY());
+            if (drawable.getSize() == null) {
+                gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), cnvMain.getWidth(), cnvMain.getHeight());
+            } else {
+                gc.drawImage((Image) drawable.getItem(), drawable.getPos().getX(), drawable.getPos().getY(), drawable.getSize().getX(), drawable.getSize().getY());
+            }
         } else if (drawable.getItem() instanceof Dialog) {
             Dialog dialog = (Dialog) drawable.getItem();
 

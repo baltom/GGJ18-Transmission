@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class Program extends Application {
 
-    private static final double WINDOW_SCALE = 0.9;
+    private static final double WINDOW_SCALE = 0.8;
 
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main_view.fxml"));
@@ -20,6 +20,8 @@ public class Program extends Application {
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
         Scene scene = new Scene(parent, bounds.getWidth() * WINDOW_SCALE, bounds.getHeight() * WINDOW_SCALE);
+
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         ((MainController) fxmlLoader.getController()).setScene(scene);
 

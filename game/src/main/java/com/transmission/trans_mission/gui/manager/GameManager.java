@@ -12,12 +12,14 @@ public class GameManager {
     private GameLoopManager gameLoopManager;
     private TileManager tileManager;
     private DialogManager dialogManager;
+    private CutsceneManager cutsceneManager;
 
     public GameManager(Canvas parent) {
         tileManager = new TileManager();
         tileManager.setTileScale(2.);
         tileManager.loadAllTiles();
         dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
+        cutsceneManager = new CutsceneManager(tileManager.getTileSet("TransSiberian_Train_Helicoptershot").setScale(1.));
 
         gameLoopManager = new GameLoopManager(dialogManager);
 
@@ -29,6 +31,7 @@ public class GameManager {
 
     public void startGame(DrawTileCallback callback) {
         try {
+            cutsceneManager.playCutscene(0, 100, callback);
             gameLoopManager.startGameLoop(callback);
         } catch (InterruptedException e) {
             e.printStackTrace();
