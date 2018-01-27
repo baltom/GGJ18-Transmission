@@ -4,7 +4,9 @@ import com.transmission.trans_mission.gui.containers.Dialog;
 import com.transmission.trans_mission.gui.containers.TileSet;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import org.apache.commons.lang.StringUtils;
 
 public class DialogManager {
 
@@ -26,11 +28,21 @@ public class DialogManager {
 
 
     public Dialog getDialog() {
-        Dialog dialog = new Dialog(tileSet.getTile(1), Color.BLACK, Color.RED, dialogSize, dialogPos, "This is a test");
+        Dialog dialog = new Dialog(tileSet.getTile(1), Color.BLACK, Color.RED, dialogSize, dialogPos, StringUtils.repeat("Testing ", 100));
         return dialog;
     }
 
     public boolean shouldDrawDialog() {
-        return true;
+        return false;
+    }
+
+    public boolean isWithinDialogBounds(double x, double y) {
+        return dialogPos.getX() < x && dialogPos.getY() < y &&
+                dialogPos.getX() + dialogSize.getX() > x &&
+                dialogPos.getY() + dialogSize.getY() > y;
+    }
+
+    public void clickDialog(MouseEvent mouseEvent) {
+
     }
 }

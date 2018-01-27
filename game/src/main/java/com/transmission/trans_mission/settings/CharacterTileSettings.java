@@ -8,6 +8,7 @@ public class CharacterTileSettings implements TileMapSettings {
     private final Double height;
     private final Double width;
     private final Double padding;
+    private final Boolean entireSheet;
 
     public CharacterTileSettings(String name) {
         this(name, 0.);
@@ -18,6 +19,7 @@ public class CharacterTileSettings implements TileMapSettings {
         this.padding = padding;
         this.width = 48.;
         this.height = 56.;
+        this.entireSheet = false;
     }
 
     public CharacterTileSettings(String s, double width, double height) {
@@ -25,6 +27,15 @@ public class CharacterTileSettings implements TileMapSettings {
         this.padding = 0.;
         this.width = width;
         this.height = height;
+        this.entireSheet = false;
+    }
+
+    public CharacterTileSettings(String s, boolean cover) {
+        this.name = s;
+        this.entireSheet = cover;
+        this.padding = null;
+        this.width = null;
+        this.height = null;
     }
 
     @Override
@@ -45,5 +56,10 @@ public class CharacterTileSettings implements TileMapSettings {
     @Override
     public double getPadding() {
         return padding;
+    }
+
+    @Override
+    public Boolean getEntireSheet() {
+        return entireSheet;
     }
 }

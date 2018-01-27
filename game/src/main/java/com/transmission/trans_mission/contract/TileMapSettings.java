@@ -9,4 +9,6 @@ public interface TileMapSettings {
     double getHeight();
 
     double getPadding();
+
+    Boolean getEntireSheet();
 }
