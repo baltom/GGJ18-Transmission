@@ -60,6 +60,7 @@ public class GameManager {
 
         gameLoopManager.addGameLogicItem(character);
         gameLoopManager.addRenderItem(character);
+
     }
 
     public void startGame(DrawTileCallback callback) {
