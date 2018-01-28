@@ -41,6 +41,7 @@ public class TileManager {
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground.png", true));
                 loadTileMap(new CharacterTileSettings("SkirtlookHolmes.png", 31., 31.));
                 loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
+                loadTileMap(new CharacterTileSettings("Transsiberian_Train_ToiletFemaleInterior.png", true));
         }
     }
 

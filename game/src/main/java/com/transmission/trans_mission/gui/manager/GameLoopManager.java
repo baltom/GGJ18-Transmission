@@ -35,6 +35,7 @@ public class GameLoopManager {
     private HashMap<Integer, BoundsMap> boundsHashMap;
     private boolean drawBoundsMap = false;
     private CharacterContainer character;
+    private int currentScene = 0;
 
     public GameLoopManager(DialogManager dialogManager) {
         renderItems = new ArrayList<>();
@@ -151,5 +152,13 @@ public class GameLoopManager {
     public void setCharacter(CharacterContainer character) {
         this.character = character;
         character.setBoundsMap(boundsHashMap.get(0));
+    }
+
+    public int getCurrentScene() {
+        return currentScene;
+    }
+
+    public void setCurrentScene(int currentScene) {
+        this.currentScene = currentScene;
     }
 }
