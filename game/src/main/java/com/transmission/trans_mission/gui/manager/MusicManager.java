@@ -26,8 +26,10 @@ public class MusicManager {
             theme.stop();
             currentTheme.interrupt();
         }
-        theme = new Theme(name, eternal);
-        currentTheme = new Thread(theme);
-        currentTheme.start();
+        if (name != null) {
+            theme = new Theme(name, eternal);
+            currentTheme = new Thread(theme);
+            currentTheme.start();
+        }
     }
 }

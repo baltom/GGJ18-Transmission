@@ -202,4 +202,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
         }
         return WEST;
     }
+
+    public Point2D getPos() {
+        return pos;
+    }
 }

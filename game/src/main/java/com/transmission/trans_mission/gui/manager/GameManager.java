@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 
+import java.util.Optional;
+
 import static com.transmission.trans_mission.gui.manager.CutsceneManager.INTRO_SCENE;
 import static com.transmission.trans_mission.gui.manager.CutsceneManager.START_SCENE;
 import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_MENU_THEME;
@@ -19,7 +21,7 @@ public class GameManager {
     public final static int INTRO_CUTSCENE = 2;
     public final static int GAME_START = 3;
 
-    private final int START_STEP = MAIN_MENU_START;
+    private final int START_STEP = GAME_START;
 
     private CharacterContainer character;
     private GameLoopManager gameLoopManager;
@@ -28,6 +30,7 @@ public class GameManager {
     private CutsceneManager cutsceneManager;
     private MainMenuManager mainMenuManager;
     private MusicManager musicManager;
+    private InteractionManager interactionManager;
 
     public GameManager(Canvas parent) {
         musicManager = new MusicManager();
@@ -35,6 +38,7 @@ public class GameManager {
         tileManager.setTileScale(3.);
         tileManager.loadAllTiles(START_STEP);
         cutsceneManager = new CutsceneManager();
+        interactionManager = new InteractionManager();
 
         switch (START_STEP) {
             case CUTSCENE_START:
@@ -71,6 +75,7 @@ public class GameManager {
                         Thread.sleep(500);
                     }
                 case INTRO_CUTSCENE:
+                    musicManager.playSong(null);
                     cutsceneManager.playCutscene(INTRO_SCENE, 200, callback);
                 case GAME_START:
                     musicManager.playSong(MAIN_THEME);
@@ -85,6 +90,10 @@ public class GameManager {
         if (mouseEvent.isMetaDown()) {
             System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
         }
+        Optional<String> interaction =
+                interactionManager.isAnInteraction(gameLoopManager.getCurrentScene(), mouseEvent.getX(), mouseEvent.getY(), character.getPos());
+
+        interaction.ifPresent(this::handleInteraction);
         if (dialogManager.shouldDrawDialog() && dialogManager.isWithinDialogBounds(mouseEvent.getX(), mouseEvent.getY())) {
             dialogManager.clickDialog(mouseEvent);
         } else if (gameLoopManager.isGameRunning()) {
@@ -92,6 +101,10 @@ public class GameManager {
         } else if (mainMenuManager != null) {
             mainMenuManager.clickElement(mouseEvent);
         }
+    }
+
+    private void handleInteraction(String event) {
+        System.out.println(event);
     }
 
     public void updateSize(Canvas pane) {
