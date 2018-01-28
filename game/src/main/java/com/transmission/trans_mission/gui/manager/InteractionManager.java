@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class InteractionManager {
@@ -20,7 +21,7 @@ public class InteractionManager {
         Gson gson = new Gson();
 
         try {
-            String s = FileUtils.readFileToString(new File(getClass().getResource("/interactions.json").toURI()), Charset.forName("UTF-8"));
+            String s = FileUtils.readFileToString(new File(getClass().getResource("/interactions.json").toURI()), StandardCharsets.UTF_8);
             Interaction[] inter = gson.fromJson(s, Interaction[].class);
             Arrays.stream(inter).forEach(interaction -> {
                 List<Interaction> list = interactions.getOrDefault(interaction.getMap(), new ArrayList<>());

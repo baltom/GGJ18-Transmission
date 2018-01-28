@@ -1,14 +1,16 @@
 package com.transmission.trans_mission.settings;
 
 import com.transmission.trans_mission.contract.TileMapSettings;
+import lombok.Value;
 
+@Value
 public class CharacterTileSettings implements TileMapSettings {
 
-    private final String name;
-    private final Double height;
-    private final Double width;
-    private final Double padding;
-    private final Boolean entireSheet;
+    String name;
+    Double height;
+    Double width;
+    Double padding;
+    Boolean entireSheet;
 
     public CharacterTileSettings(String name) {
         this(name, 0.);
@@ -41,25 +43,5 @@ public class CharacterTileSettings implements TileMapSettings {
     @Override
     public String name() {
         return name;
-    }
-
-    @Override
-    public double getWidth() {
-        return width;
-    }
-
-    @Override
-    public double getHeight() {
-        return height;
-    }
-
-    @Override
-    public double getPadding() {
-        return padding;
-    }
-
-    @Override
-    public Boolean getEntireSheet() {
-        return entireSheet;
     }
 }

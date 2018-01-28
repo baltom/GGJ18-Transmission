@@ -18,6 +18,7 @@ public class BoundsMap {
                 getTopRight().getX(), getTopRight().getY(),
                 getBottomLeft().getX(), getBottomLeft().getY(),
                 getBottomRight().getX(), getBottomRight().getY());
+
         return shape.contains(x, y);
     }
 }
