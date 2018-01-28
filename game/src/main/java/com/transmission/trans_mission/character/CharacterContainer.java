@@ -14,10 +14,10 @@ import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.transmission.trans_mission.character.MovementDirection.*;
@@ -35,8 +35,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private List<Point2D> allowedPoints;
     private BoundsMap boundsMap;
 
-    public CharacterContainer(TileSet tileSet, Double velocity, Point2D pos) {
-        Objects.requireNonNull(tileSet);
+    public CharacterContainer(@NonNull TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
         this.velocity = velocity;
         this.pos = pos;
