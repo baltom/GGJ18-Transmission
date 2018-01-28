@@ -16,7 +16,7 @@ public class GameManager {
     public final static int MAIN_MENU_START = 1;
     public final static int GAME_START = 2;
 
-    private final int START_STEP = CUTSCENE_START;
+    private final int START_STEP = GAME_START;
 
     private CharacterContainer character;
     private GameLoopManager gameLoopManager;
@@ -45,7 +45,7 @@ public class GameManager {
         gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior").setScale(3.));
         gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground").setScale(3.));
 
-        character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(350, 525));
+        character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(545, 428));
         gameLoopManager.setCharacter(character);
 
         gameLoopManager.addGameLogicItem(character);
