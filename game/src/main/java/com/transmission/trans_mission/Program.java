@@ -19,7 +19,7 @@ public class Program extends Application {
 
         Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 
-        Scene scene = new Scene(parent, bounds.getWidth() * WINDOW_SCALE, bounds.getHeight() * WINDOW_SCALE);
+        Scene scene = new Scene(parent, 1366, 768);
 
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
@@ -28,5 +28,6 @@ public class Program extends Application {
         primaryStage.setTitle("Trans Mission - GameJam 2018");
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setResizable(false);
     }
 }

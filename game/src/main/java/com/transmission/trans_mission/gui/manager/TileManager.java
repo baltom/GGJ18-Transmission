@@ -34,6 +34,8 @@ public class TileManager {
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot.png", 64., 36.));
             case MAIN_MENU_START:
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train.png", 64., 36.));
+            case INTRO_CUTSCENE:
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Cutscene_MurderDiscovery.png", 147., 104.));
             case GAME_START:
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior.png", true));
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground.png", true));

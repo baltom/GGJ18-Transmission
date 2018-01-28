@@ -18,11 +18,15 @@ public class MusicManager {
     }
 
     public void playSong(String name) {
+        this.playSong(name, true);
+    }
+
+    public void playSong(String name, Boolean eternal) {
         if (currentTheme != null) {
             theme.stop();
             currentTheme.interrupt();
         }
-        theme = new Theme(name);
+        theme = new Theme(name, eternal);
         currentTheme = new Thread(theme);
         currentTheme.start();
     }

@@ -75,6 +75,8 @@ public class MainController implements Initializable, DrawCallback {
     }
 
     private void updateSize() {
+        System.out.println(cnvMain.getWidth());
+        System.out.println(cnvMain.getHeight());
         gameManager.updateSize(cnvMain);
     }
 

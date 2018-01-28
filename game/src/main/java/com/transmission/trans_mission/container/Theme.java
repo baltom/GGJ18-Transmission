@@ -8,10 +8,16 @@ import static javafx.scene.media.MediaPlayer.INDEFINITE;
 public class Theme extends Task {
 
     private final String name;
+    private final Boolean eternal;
     private AudioClip audioClip;
 
     public Theme(String name) {
+        this(name, true);
+    }
+
+    public Theme(String name, Boolean eternal) {
         this.name = name;
+        this.eternal = eternal;
     }
 
     @Override
@@ -19,7 +25,9 @@ public class Theme extends Task {
         int s = INDEFINITE;
         audioClip = new AudioClip(getClass().getResource("/music/" + name).toExternalForm());
         audioClip.setVolume(0.5f);
-        audioClip.setCycleCount(s);
+        if (this.eternal) {
+            audioClip.setCycleCount(s);
+        }
         audioClip.play();
         return null;
     }
