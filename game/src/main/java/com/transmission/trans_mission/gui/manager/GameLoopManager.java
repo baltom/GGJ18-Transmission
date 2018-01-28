@@ -13,8 +13,7 @@ import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.transmission.trans_mission.gui.manager.SceneManager.TOILET_SCENE;
-import static com.transmission.trans_mission.gui.manager.SceneManager.TRAIN_SCENE;
+import static com.transmission.trans_mission.gui.manager.SceneManager.*;
 
 public class GameLoopManager {
 
@@ -160,6 +159,12 @@ public class GameLoopManager {
             character.setPos(characterPos);
         } else {
             character.setShouldRender(false);
+        }
+
+        if (scene == MURDER_SCENE) {
+            dialogManager.displayDialog(scene);
+        } else {
+            dialogManager.removeDialog();
         }
     }
 

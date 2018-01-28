@@ -48,7 +48,7 @@ public class GameManager {
             case INTRO_CUTSCENE:
                 cutsceneManager.addCutscene(INTRO_SCENE, tileManager.getTileSet("TransSiberian_Train_Cutscene_MurderDiscovery").setScale(3.));
             case GAME_START:
-                dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
+                dialogManager = new DialogManager(parent, tileManager.getTileSet("Skirtlook_portrait"));
                 cutsceneManager.addCutscene(MURDER_CUTSCENE, tileManager.getTileSet("Transsiberian_Cutscene_Sunglasses").setScale(3.));
         }
 

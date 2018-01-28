@@ -6,7 +6,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import org.apache.commons.lang.StringUtils;
 
 public class DialogManager {
 
@@ -15,6 +14,10 @@ public class DialogManager {
     private Point2D dialogSize;
     private TileSet tileSet;
 
+    private Dialog currentDialog;
+    private boolean shouldDraw;
+    private boolean hasRequested;
+
     public DialogManager(Canvas parent, TileSet tileSet) {
         initDialogSize(parent);
         this.tileSet = tileSet;
@@ -22,18 +25,18 @@ public class DialogManager {
 
     public void initDialogSize(Canvas parent) {
         this.parent = parent;
-        dialogSize = new Point2D(parent.getWidth(), 250);
+        dialogSize = new Point2D(parent.getWidth(), 150);
         dialogPos = new Point2D(0, parent.getHeight() - dialogSize.getY());
     }
 
 
     public Dialog getDialog() {
-        Dialog dialog = new Dialog(tileSet.getTile(1), Color.BLACK, Color.RED, dialogSize, dialogPos, StringUtils.repeat("Testing ", 100));
-        return dialog;
+        hasRequested = true;
+        return currentDialog;
     }
 
     public boolean shouldDrawDialog() {
-        return false;
+        return shouldDraw;
     }
 
     public boolean isWithinDialogBounds(double x, double y) {
@@ -43,6 +46,20 @@ public class DialogManager {
     }
 
     public void clickDialog(MouseEvent mouseEvent) {
+        if (hasRequested) {
+            hasRequested = false;
+            shouldDraw = false;
+        }
+    }
 
+    public void displayDialog(int scene) {
+        shouldDraw = true;
+        currentDialog = new Dialog(tileSet.getTile(0), Color.BLACK, Color.RED, dialogSize, dialogPos, "Is that a hair?");
+    }
+
+    public void removeDialog() {
+        shouldDraw = false;
+        hasRequested = false;
+        currentDialog = null;
     }
 }
