@@ -4,6 +4,8 @@ import com.transmission.trans_mission.contract.TileMapSettings;
 import com.transmission.trans_mission.gui.containers.Tile;
 import com.transmission.trans_mission.gui.containers.TileSet;
 import com.transmission.trans_mission.settings.CharacterTileSettings;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 
@@ -12,7 +14,9 @@ import static com.transmission.trans_mission.gui.manager.GameManager.*;
 public class TileManager {
 
     private HashMap<String, TileSet> tileSets;
+    @Getter @Setter
     private Tile activeTile;
+    @Getter @Setter
     private Double tileScale;
 
     public TileManager() {
@@ -44,19 +48,4 @@ public class TileManager {
         }
     }
 
-    public Tile getActiveTile() {
-        return activeTile;
-    }
-
-    public void setActiveTile(Tile activeTile) {
-        this.activeTile = activeTile;
-    }
-
-    public Double getTileScale() {
-        return tileScale;
-    }
-
-    public void setTileScale(Double tileScale) {
-        this.tileScale = tileScale;
-    }
 }

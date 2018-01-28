@@ -11,7 +11,7 @@ public class BoundsMap {
     private Pos bottomRight;
     private Pos topLeft;
     private Pos topRight;
-    
+
     public boolean isWithinBounds(int x, int y) {
         Polygon shape = new Polygon(
                 getTopLeft().getX(), getTopLeft().getY(),
