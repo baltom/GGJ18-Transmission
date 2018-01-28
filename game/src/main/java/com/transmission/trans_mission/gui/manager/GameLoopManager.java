@@ -1,29 +1,22 @@
 package com.transmission.trans_mission.gui.manager;
 
-import com.google.gson.Gson;
 import com.transmission.trans_mission.character.CharacterContainer;
 import com.transmission.trans_mission.container.BoundsMap;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.contract.GameLogicCallback;
 import com.transmission.trans_mission.contract.RenderCallback;
 import com.transmission.trans_mission.gui.containers.Square;
-import com.transmission.trans_mission.gui.containers.Tile;
-import com.transmission.trans_mission.gui.containers.TileDrawable;
 import com.transmission.trans_mission.gui.containers.TileSet;
-import javafx.geometry.Point2D;
-import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.transmission.trans_mission.gui.manager.SceneManager.TRAIN_SCENE;
 
 public class GameLoopManager {
 
     private final DialogManager dialogManager;
+    private final SceneManager sceneManager;
     private List<RenderCallback> renderItems;
     private List<GameLogicCallback> gameLogic;
     private boolean gameRunning;
@@ -32,34 +25,14 @@ public class GameLoopManager {
     private boolean doARender;
     private boolean hasDoneInitialRender = false;
     private List<TileSet> backgroundTiles;
-    private HashMap<Integer, BoundsMap> boundsHashMap;
     private boolean drawBoundsMap = false;
     private CharacterContainer character;
-    private int currentScene = 0;
 
     public GameLoopManager(DialogManager dialogManager) {
         renderItems = new ArrayList<>();
         gameLogic = new ArrayList<>();
         this.dialogManager = dialogManager;
-        loadBoundsMap("bounds.json");
-    }
-
-    private void loadBoundsMap(String s) {
-        boundsHashMap = new HashMap<>();
-
-        try {
-            String file = FileUtils.readFileToString(new File(getClass().getResource("/" + s).toURI()), Charset.forName("UTF-8"));
-            Gson gson = new Gson();
-            BoundsMap[] boundsMaps = gson.fromJson(file, BoundsMap[].class);
-            for (BoundsMap map :
-                    boundsMaps) {
-                boundsHashMap.put(map.getId(), map);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        this.sceneManager = new SceneManager(TRAIN_SCENE);
     }
 
     public void addRenderItem(RenderCallback item) {
@@ -107,21 +80,17 @@ public class GameLoopManager {
             hasDoneInitialRender = true;
             doARender = false;
             callback.draw(null);
-            callback.draw(new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(0).getImage()));
+            callback.draw(sceneManager.getBackgroundLayer());
             renderItems.forEach(render -> render.render(callback));
-            callback.draw(new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(1).getImage()));
+            callback.draw(sceneManager.getForegroundLayer());
             if (dialogManager.shouldDrawDialog()) {
                 callback.draw(dialogManager.getDialog());
             }
             if (drawBoundsMap) {
-                BoundsMap boundsMap = boundsHashMap.get(0);
+                BoundsMap boundsMap = getBoundsMap();
                 callback.draw(new Square(boundsMap));
             }
         }
-    }
-
-    private Tile getBackgroundTile(int num) {
-        return backgroundTiles.get(num).getTile(0);
     }
 
     public void setDoARender(boolean doARender) {
@@ -138,27 +107,25 @@ public class GameLoopManager {
         return gameRunning;
     }
 
-    public void addBackgroundTileSet(TileSet tileSet) {
-        if (this.backgroundTiles == null) {
-            this.backgroundTiles = new ArrayList<>();
-        }
-        this.backgroundTiles.add(tileSet);
+    public void addBackgroundTileSet(int scene, TileSet... tileSet) {
+        this.sceneManager.addBackgroundScene(scene, tileSet);
     }
 
     public BoundsMap getBoundsMap() {
-        return boundsHashMap.get(0);
+        return sceneManager.getBoundsMap();
     }
 
     public void setCharacter(CharacterContainer character) {
         this.character = character;
-        character.setBoundsMap(boundsHashMap.get(0));
+        this.character.setBoundsMap(sceneManager.getBoundsMap());
     }
 
     public int getCurrentScene() {
-        return currentScene;
+        return sceneManager.getCurrentScene();
     }
 
-    public void setCurrentScene(int currentScene) {
-        this.currentScene = currentScene;
+    public void changeScene(int scene) {
+        sceneManager.updateScene(scene);
+        character.setBoundsMap(sceneManager.getBoundsMap());
     }
 }

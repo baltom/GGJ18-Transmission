@@ -13,6 +13,8 @@ import static com.transmission.trans_mission.gui.manager.CutsceneManager.INTRO_S
 import static com.transmission.trans_mission.gui.manager.CutsceneManager.START_SCENE;
 import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_MENU_THEME;
 import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_THEME;
+import static com.transmission.trans_mission.gui.manager.SceneManager.TOILET_SCENE;
+import static com.transmission.trans_mission.gui.manager.SceneManager.TRAIN_SCENE;
 
 public class GameManager {
 
@@ -52,8 +54,8 @@ public class GameManager {
         }
 
         gameLoopManager = new GameLoopManager(dialogManager);
-        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior").setScale(3.));
-        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(TRAIN_SCENE, tileManager.getTileSet("TransSiberian_Train_Interior").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(TRAIN_SCENE, tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground").setScale(3.));
 
         character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(545, 428));
         gameLoopManager.setCharacter(character);
@@ -104,6 +106,11 @@ public class GameManager {
     }
 
     private void handleInteraction(String event) {
+        switch (event) {
+            case "TOILET_DOOR":
+                gameLoopManager.changeScene(TOILET_SCENE);
+                break;
+        }
         System.out.println(event);
     }
 
