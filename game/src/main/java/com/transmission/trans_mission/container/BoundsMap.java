@@ -1,5 +1,7 @@
 package com.transmission.trans_mission.container;
 
+import javafx.scene.shape.Polygon;
+
 public class BoundsMap {
 
     private int id;
@@ -60,17 +62,11 @@ public class BoundsMap {
     }
 
     public boolean isWithinBounds(int x, int y) {
-        Pos test = new Pos(x, y);
-        Pos[] points = {getTopLeft(), getTopRight(), getBottomRight(), getBottomLeft()};
-        int i;
-        int j;
-        boolean result = false;
-        for (i = 0, j = points.length - 1; i < points.length; j = i++) {
-            if ((points[i].getY() > test.getY()) != (points[j].getY() > test.getY()) &&
-                    (test.getX() < (points[j].getX() - points[i].getX()) * (test.getY() - points[i].getY()) / (points[j].getY() - points[i].getY()) + points[i].getX())) {
-                result = !result;
-            }
-        }
-        return result;
+        Polygon shape = new Polygon(
+                getTopLeft().getX(), getTopLeft().getY(),
+                getTopRight().getX(), getTopRight().getY(),
+                getBottomLeft().getX(), getBottomLeft().getY(),
+                getBottomRight().getX(), getBottomRight().getY());
+        return shape.contains(x, y);
     }
 }
