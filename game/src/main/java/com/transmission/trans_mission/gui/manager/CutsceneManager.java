@@ -11,6 +11,7 @@ public class CutsceneManager {
 
     public static final int START_SCENE = 0;
     public static final int INTRO_SCENE = 1;
+    public static final int MURDER_CUTSCENE = 2;
 
     private HashMap<Integer, TileSet> cutscenes;
 

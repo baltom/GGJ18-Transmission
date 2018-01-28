@@ -9,10 +9,8 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.Optional;
 
-import static com.transmission.trans_mission.gui.manager.CutsceneManager.INTRO_SCENE;
-import static com.transmission.trans_mission.gui.manager.CutsceneManager.START_SCENE;
-import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_MENU_THEME;
-import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_THEME;
+import static com.transmission.trans_mission.gui.manager.CutsceneManager.*;
+import static com.transmission.trans_mission.gui.manager.MusicManager.*;
 import static com.transmission.trans_mission.gui.manager.SceneManager.*;
 
 public class GameManager {
@@ -22,7 +20,7 @@ public class GameManager {
     public final static int INTRO_CUTSCENE = 2;
     public final static int GAME_START = 3;
 
-    private final int START_STEP = GAME_START;
+    private final int START_STEP = CUTSCENE_START;
 
     private CharacterContainer character;
     private GameLoopManager gameLoopManager;
@@ -32,6 +30,7 @@ public class GameManager {
     private MainMenuManager mainMenuManager;
     private MusicManager musicManager;
     private InteractionManager interactionManager;
+    private DrawTileCallback callback;
 
     public GameManager(Canvas parent) {
         musicManager = new MusicManager();
@@ -50,6 +49,7 @@ public class GameManager {
                 cutsceneManager.addCutscene(INTRO_SCENE, tileManager.getTileSet("TransSiberian_Train_Cutscene_MurderDiscovery").setScale(3.));
             case GAME_START:
                 dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
+                cutsceneManager.addCutscene(MURDER_CUTSCENE, tileManager.getTileSet("Transsiberian_Cutscene_Sunglasses").setScale(3.));
         }
 
         gameLoopManager = new GameLoopManager(dialogManager, interactionManager);
@@ -68,6 +68,7 @@ public class GameManager {
     }
 
     public void startGame(DrawTileCallback callback) {
+        this.callback = callback;
         try {
             switch (START_STEP) {
                 case CUTSCENE_START:
@@ -114,9 +115,11 @@ public class GameManager {
     private void handleInteraction(String event) {
         switch (event) {
             case "TOILET_DOOR":
+                musicManager.playSong(TOILET_THEME);
                 gameLoopManager.changeScene(TOILET_SCENE);
                 break;
             case "OUT_TOILET_DOOR":
+                musicManager.playSong(MAIN_THEME);
                 gameLoopManager.changeScene(TRAIN_SCENE);
                 break;
             case "DEAD_WOMAN":
@@ -126,6 +129,8 @@ public class GameManager {
                 gameLoopManager.changeScene(PUBE_SCENE);
                 break;
             case "PUBE_SCENE":
+                gameLoopManager.playCutscene(MURDER_CUTSCENE, cutsceneManager);
+                //cutsceneManager.playCutscene(MURDER_CUTSCENE, 200, callback);
                 System.out.println("Cutscene!");
                 break;
         }

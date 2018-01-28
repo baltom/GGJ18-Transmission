@@ -29,8 +29,11 @@ public class GameLoopManager {
     private boolean doARender;
     private boolean hasDoneInitialRender = false;
     private List<TileSet> backgroundTiles;
-    private boolean drawBoundsMap = true;
+    private boolean drawBoundsMap = false;
     private CharacterContainer character;
+    private CutsceneManager cutscene;
+    private boolean playCutscene;
+    private int cutSceneNum;
 
     public GameLoopManager(DialogManager dialogManager, InteractionManager interactionManager) {
         renderItems = new ArrayList<>();
@@ -59,23 +62,29 @@ public class GameLoopManager {
         final long OPTIMAL_TIME = 1_000_000_000 / TARGET_FPS;
 
         while (gameRunning) {
-            long now = System.nanoTime();
-            long updateLength = now - lastLoopTime;
-            lastLoopTime = now;
-            double delta = updateLength / ((double) OPTIMAL_TIME);
+            if (playCutscene && cutscene != null) {
+                cutscene.playCutscene(cutSceneNum, 200, callback);
+                playCutscene = false;
+                sceneManager.updateScene(TOILET_SCENE);
+            } else {
+                long now = System.nanoTime();
+                long updateLength = now - lastLoopTime;
+                lastLoopTime = now;
+                double delta = updateLength / ((double) OPTIMAL_TIME);
 
-            lastFpsTime += updateLength;
-            fps++;
+                lastFpsTime += updateLength;
+                fps++;
 
-            if (lastFpsTime >= 1_000_000_000) {
-                System.out.println("(FPS: " + fps + ")");
-                lastFpsTime = 0;
-                fps = 0;
+                if (lastFpsTime >= 1_000_000_000) {
+                    System.out.println("(FPS: " + fps + ")");
+                    lastFpsTime = 0;
+                    fps = 0;
+                }
+
+                doGameUpdates(delta);
+                render(callback);
+                Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1_000_000);
             }
-
-            doGameUpdates(delta);
-            render(callback);
-            Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1_000_000);
         }
     }
 
@@ -156,5 +165,11 @@ public class GameLoopManager {
 
     public int getCurrentMaxRange() {
         return sceneManager.getCurrentMaxRange();
+    }
+
+    public void playCutscene(int murderCutscene, CutsceneManager cutsceneManager) {
+        this.cutscene = cutsceneManager;
+        this.playCutscene = true;
+        this.cutSceneNum = murderCutscene;
     }
 }

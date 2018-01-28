@@ -48,6 +48,7 @@ public class TileManager {
                 loadTileMap(new CharacterTileSettings("Transsiberian_Train_ToiletFemaleInterior.png", true));
                 loadTileMap(new CharacterTileSettings("Transsiberian_Toilet_MurderCloseup.png", true));
                 loadTileMap(new CharacterTileSettings("TransSiberian_PubeScene.png", true));
+                loadTileMap(new CharacterTileSettings("Transsiberian_Cutscene_Sunglasses.png", 64., 36.));
         }
     }
 
