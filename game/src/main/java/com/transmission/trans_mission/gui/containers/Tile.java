@@ -7,6 +7,7 @@ import javafx.scene.image.WritableImage;
 
 public class Tile {
 
+    private Image originalImage;
     private Image image;
     private Double scale;
 
@@ -16,11 +17,13 @@ public class Tile {
 
     public Tile(WritableImage newImage, Double tileScale) {
         scale = tileScale;
+        originalImage = newImage;
         image = resample(newImage, tileScale);
     }
 
     public Tile(Image newImage, Double tileScale) {
         scale = tileScale;
+        originalImage = newImage;
         image = resample(newImage, tileScale);
     }
 

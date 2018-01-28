@@ -22,6 +22,8 @@ public class SceneManager {
 
     public static final int TRAIN_SCENE = 0;
     public static final int TOILET_SCENE = 1;
+    public static final int MURDER_SCENE = 2;
+    public static final int PUBE_SCENE = 3;
 
     private int currentScene;
     private HashMap<Integer, BoundsMap> boundsHashMap;
@@ -56,6 +58,13 @@ public class SceneManager {
                 case TRAIN_SCENE:
                     returnTile = new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(0).getImage());
                     break;
+                case TOILET_SCENE:
+                    returnTile = new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(0).getImage());
+                    break;
+                case MURDER_SCENE:
+                    returnTile = new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(0).getImage());
+                case PUBE_SCENE:
+                    returnTile = new TileDrawable(null, new Point2D(0, 0), getBackgroundTile(0).getImage());
             }
         } catch (NullPointerException e) {
             System.out.println("Failed background");
@@ -102,5 +111,38 @@ public class SceneManager {
         List<TileSet> tileset = backgroundTiles.getOrDefault(scene, new ArrayList<>());
         tileset.addAll(Arrays.stream(tileSet).collect(Collectors.toList()));
         backgroundTiles.put(scene, tileset);
+    }
+
+    public Double getCharacterScale() {
+        switch (currentScene) {
+            case TRAIN_SCENE:
+                return 3.;
+            case TOILET_SCENE:
+                return 4.;
+        }
+        return 3.;
+    }
+
+    public Point2D getCharacterPos() {
+        switch (currentScene) {
+            case TRAIN_SCENE:
+                return new Point2D(0, 0);
+            case TOILET_SCENE:
+                return new Point2D(3., 485.);
+        }
+        return new Point2D(0, 0);
+    }
+
+    public int getCurrentMaxRange() {
+        switch (currentScene) {
+            case TRAIN_SCENE:
+                return 100;
+            case TOILET_SCENE:
+                return 650;
+            case MURDER_SCENE:
+            case PUBE_SCENE:
+                return 1300;
+        }
+        return 100;
     }
 }

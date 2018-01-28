@@ -2,13 +2,14 @@ package com.transmission.trans_mission.gui.manager;
 
 import com.google.gson.Gson;
 import com.transmission.trans_mission.container.Interaction;
+import com.transmission.trans_mission.contract.DrawTileCallback;
+import com.transmission.trans_mission.gui.containers.Square;
 import javafx.geometry.Point2D;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -33,17 +34,31 @@ public class InteractionManager {
         }
     }
 
-    public Optional<String> isAnInteraction(int map, double x, double y, Point2D sourcePos) {
-        return isAnInteraction(map, new Point2D(x, y), sourcePos);
+    public Optional<String> isAnInteraction(int map, double x, double y, Point2D sourcePos, int maxDistance) {
+        return isAnInteraction(map, new Point2D(x, y), sourcePos, maxDistance);
     }
 
-    private Optional<String> isAnInteraction(int map, Point2D mouseClick, Point2D playerPos) {
+    private Optional<String> isAnInteraction(int map, Point2D mouseClick, Point2D playerPos, int maxDistance) {
         List<Interaction> interactions = this.interactions.getOrDefault(map, new ArrayList<>());
         if (interactions.isEmpty()) return Optional.empty();
         Optional<Interaction> any = interactions.stream()
                 .filter(Interaction::isEnabled)
-                .filter(p -> mouseClick.distance(playerPos) <= 100)
+                .filter(p -> {
+                    boolean b = mouseClick.distance(playerPos) <= maxDistance;
+                    if (!b) {
+                        System.out.println("Too far ( " + mouseClick.distance(playerPos) + ")");
+                    }
+                    return b;
+                })
                 .filter(interaction -> interaction.getPolygon().contains(mouseClick)).findAny();
         return any.map(Interaction::getEvent);
+    }
+
+    public void drawInteractions(DrawTileCallback callback, int currentScene) {
+        List<Interaction> interactions = this.interactions.get(currentScene);
+        interactions.forEach(interaction -> {
+            Square square = new Square(interaction);
+            callback.draw(square);
+        });
     }
 }

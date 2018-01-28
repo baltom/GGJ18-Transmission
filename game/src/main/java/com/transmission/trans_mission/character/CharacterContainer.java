@@ -34,6 +34,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private FlipManager flipManager;
     private List<Point2D> allowedPoints;
     private BoundsMap boundsMap;
+    private boolean doPositionMove;
+    private boolean shouldRender = true;
 
     public CharacterContainer(@NonNull TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
@@ -46,27 +48,31 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     @Override
     public boolean gameLogic(double delta) {
-        if (isMoving()) {
-            animation.setAnimationLength(2);
-            animation.play();
-            Point2D posOffset;
-            if (flipManager.isFlipped()) {
-                posOffset = new Point2D(pos.getX() - getCurrentTile().getWidth() / 2,
-                        pos.getY() + getCurrentTile().getHeight() / 2 + 40);
-            } else {
-                posOffset = new Point2D(pos.getX() + getCurrentTile().getWidth() / 2,
-                        pos.getY() + getCurrentTile().getHeight() / 2 + 40);
-            }
-            if (posOffset.distance(target) < 1.5) {
-                setMoving(false);
-            } else {
-                angle = calculateAngle(posOffset, target);
-                pos = new Point2D((pos.getX() + flipManager.getHorizontalOffset()) + ((velocity * Math.cos(angle)) * delta),
-                        pos.getY() + ((velocity * Math.sin(angle)) * delta));
-            }
-            return true;
+        if (doPositionMove) {
+            doPositionMove = false;
         } else {
-            animation.play();
+            if (isMoving()) {
+                animation.setAnimationLength(2);
+                animation.play();
+                Point2D posOffset;
+                if (flipManager.isFlipped()) {
+                    posOffset = new Point2D(pos.getX() - getCurrentTile().getWidth() / 2,
+                            pos.getY() + getCurrentTile().getHeight() / 2 + 40);
+                } else {
+                    posOffset = new Point2D(pos.getX() + getCurrentTile().getWidth() / 2,
+                            pos.getY() + getCurrentTile().getHeight() / 2 + 40);
+                }
+                if (posOffset.distance(target) < 1.5) {
+                    setMoving(false);
+                } else {
+                    angle = calculateAngle(posOffset, target);
+                    pos = new Point2D((pos.getX() + flipManager.getHorizontalOffset()) + ((velocity * Math.cos(angle)) * delta),
+                            pos.getY() + ((velocity * Math.sin(angle)) * delta));
+                }
+                return true;
+            } else {
+                animation.play();
+            }
         }
         return false;
     }
@@ -89,9 +95,11 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     @Override
     public void render(DrawTileCallback gc) {
-        Tile currentTile = getCurrentTile();
-        Point2D size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
-        gc.draw(new TileDrawable(size, pos, currentTile.getImage()));
+        if (shouldRender) {
+            Tile currentTile = getCurrentTile();
+            Point2D size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
+            gc.draw(new TileDrawable(size, pos, currentTile.getImage()));
+        }
     }
 
     private Tile getCurrentTile() {
@@ -128,7 +136,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     }
 
     public void characterMove(MouseEvent keyEvent, BoundsMap map) {
-        if (isWithinAllowedBounds(keyEvent.getX(), keyEvent.getY(), map)) {
+        if (boundsMap == null || isWithinAllowedBounds(keyEvent.getX(), keyEvent.getY(), map)) {
             setMoving(true);
             target = new Point2D(keyEvent.getX(), keyEvent.getY());
         } else {
@@ -154,7 +162,11 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     public void setBoundsMap(BoundsMap boundsMap) {
         this.boundsMap = boundsMap;
         this.allowedPoints = new ArrayList<>();
-        calculateClosestPoints();
+        if (boundsMap != null) {
+            calculateClosestPoints();
+        } else {
+            System.out.println("No bounds map!");
+        }
     }
 
     private void calculateClosestPoints() {
@@ -176,7 +188,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     }
 
     private boolean isWithinAllowedBounds(double x, double y, BoundsMap map) {
-        return map.isWithinBounds((int) x, (int) y);
+        return map == null || map.isWithinBounds((int) x, (int) y);
     }
 
     public boolean isMoving() {
@@ -205,5 +217,20 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     public Point2D getPos() {
         return pos;
+    }
+
+    public void setScale(Double characterScale) {
+        tileSet.setScale(characterScale);
+    }
+
+    public void setPos(Point2D characterPos) {
+        System.out.println("Pos change: " + characterPos);
+        doPositionMove = true;
+        pos = characterPos;
+        target = null;
+    }
+
+    public void setShouldRender(boolean shouldRender) {
+        this.shouldRender = shouldRender;
     }
 }

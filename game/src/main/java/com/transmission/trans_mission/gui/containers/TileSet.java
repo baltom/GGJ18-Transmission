@@ -34,7 +34,6 @@ public class TileSet {
                             tiles.add(new Tile(newImage, tileScale));
                         }
                     } catch (IndexOutOfBoundsException e) {
-                        System.out.println("Woot");
                     }
                 }
             }

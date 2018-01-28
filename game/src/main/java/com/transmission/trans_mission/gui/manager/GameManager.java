@@ -13,8 +13,7 @@ import static com.transmission.trans_mission.gui.manager.CutsceneManager.INTRO_S
 import static com.transmission.trans_mission.gui.manager.CutsceneManager.START_SCENE;
 import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_MENU_THEME;
 import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_THEME;
-import static com.transmission.trans_mission.gui.manager.SceneManager.TOILET_SCENE;
-import static com.transmission.trans_mission.gui.manager.SceneManager.TRAIN_SCENE;
+import static com.transmission.trans_mission.gui.manager.SceneManager.*;
 
 public class GameManager {
 
@@ -53,9 +52,12 @@ public class GameManager {
                 dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
         }
 
-        gameLoopManager = new GameLoopManager(dialogManager);
-        gameLoopManager.addBackgroundTileSet(TRAIN_SCENE, tileManager.getTileSet("TransSiberian_Train_Interior").setScale(3.));
+        gameLoopManager = new GameLoopManager(dialogManager, interactionManager);
+        gameLoopManager.addBackgroundTileSet(TRAIN_SCENE, tileManager.getTileSet("TransSiberian_Train_Interior_withPeople").setScale(3.));
         gameLoopManager.addBackgroundTileSet(TRAIN_SCENE, tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(TOILET_SCENE, tileManager.getTileSet("Transsiberian_Train_ToiletFemaleInterior").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(MURDER_SCENE, tileManager.getTileSet("Transsiberian_Toilet_MurderCloseup").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(PUBE_SCENE, tileManager.getTileSet("TransSiberian_PubeScene").setScale(3.));
 
         character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(545, 428));
         gameLoopManager.setCharacter(character);
@@ -93,7 +95,11 @@ public class GameManager {
             System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
         }
         Optional<String> interaction =
-                interactionManager.isAnInteraction(gameLoopManager.getCurrentScene(), mouseEvent.getX(), mouseEvent.getY(), character.getPos());
+                interactionManager.isAnInteraction(
+                        gameLoopManager.getCurrentScene(),
+                        mouseEvent.getX(), mouseEvent.getY(),
+                        character.getPos(),
+                        gameLoopManager.getCurrentMaxRange());
 
         interaction.ifPresent(this::handleInteraction);
         if (dialogManager.shouldDrawDialog() && dialogManager.isWithinDialogBounds(mouseEvent.getX(), mouseEvent.getY())) {
@@ -109,6 +115,18 @@ public class GameManager {
         switch (event) {
             case "TOILET_DOOR":
                 gameLoopManager.changeScene(TOILET_SCENE);
+                break;
+            case "OUT_TOILET_DOOR":
+                gameLoopManager.changeScene(TRAIN_SCENE);
+                break;
+            case "DEAD_WOMAN":
+                gameLoopManager.changeScene(MURDER_SCENE);
+                break;
+            case "PUBE":
+                gameLoopManager.changeScene(PUBE_SCENE);
+                break;
+            case "PUBE_SCENE":
+                System.out.println("Cutscene!");
                 break;
         }
         System.out.println(event);

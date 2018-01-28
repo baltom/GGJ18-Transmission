@@ -6,17 +6,21 @@ import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.contract.GameLogicCallback;
 import com.transmission.trans_mission.contract.RenderCallback;
 import com.transmission.trans_mission.gui.containers.Square;
+import com.transmission.trans_mission.gui.containers.TileDrawable;
 import com.transmission.trans_mission.gui.containers.TileSet;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.transmission.trans_mission.gui.manager.SceneManager.TOILET_SCENE;
 import static com.transmission.trans_mission.gui.manager.SceneManager.TRAIN_SCENE;
 
 public class GameLoopManager {
 
     private final DialogManager dialogManager;
     private final SceneManager sceneManager;
+    private final InteractionManager interactionManger;
     private List<RenderCallback> renderItems;
     private List<GameLogicCallback> gameLogic;
     private boolean gameRunning;
@@ -25,13 +29,14 @@ public class GameLoopManager {
     private boolean doARender;
     private boolean hasDoneInitialRender = false;
     private List<TileSet> backgroundTiles;
-    private boolean drawBoundsMap = false;
+    private boolean drawBoundsMap = true;
     private CharacterContainer character;
 
-    public GameLoopManager(DialogManager dialogManager) {
+    public GameLoopManager(DialogManager dialogManager, InteractionManager interactionManager) {
         renderItems = new ArrayList<>();
         gameLogic = new ArrayList<>();
         this.dialogManager = dialogManager;
+        this.interactionManger = interactionManager;
         this.sceneManager = new SceneManager(TRAIN_SCENE);
     }
 
@@ -80,15 +85,26 @@ public class GameLoopManager {
             hasDoneInitialRender = true;
             doARender = false;
             callback.draw(null);
-            callback.draw(sceneManager.getBackgroundLayer());
+
+            TileDrawable backgroundLayer = sceneManager.getBackgroundLayer();
+            if (backgroundLayer != null) {
+                callback.draw(backgroundLayer);
+            }
+
             renderItems.forEach(render -> render.render(callback));
-            callback.draw(sceneManager.getForegroundLayer());
+
+            TileDrawable foregroundLayer = sceneManager.getForegroundLayer();
+            if (foregroundLayer != null) {
+                callback.draw(foregroundLayer);
+            }
+
             if (dialogManager.shouldDrawDialog()) {
                 callback.draw(dialogManager.getDialog());
             }
             if (drawBoundsMap) {
                 BoundsMap boundsMap = getBoundsMap();
                 callback.draw(new Square(boundsMap));
+                interactionManger.drawInteractions(callback, sceneManager.getCurrentScene());
             }
         }
     }
@@ -126,6 +142,19 @@ public class GameLoopManager {
 
     public void changeScene(int scene) {
         sceneManager.updateScene(scene);
-        character.setBoundsMap(sceneManager.getBoundsMap());
+        if (scene == TRAIN_SCENE || scene == TOILET_SCENE) {
+            character.setShouldRender(true);
+            Double characterScale = sceneManager.getCharacterScale();
+            Point2D characterPos = sceneManager.getCharacterPos();
+            character.setBoundsMap(sceneManager.getBoundsMap());
+            character.setScale(characterScale);
+            character.setPos(characterPos);
+        } else {
+            character.setShouldRender(false);
+        }
+    }
+
+    public int getCurrentMaxRange() {
+        return sceneManager.getCurrentMaxRange();
     }
 }

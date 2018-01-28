@@ -75,8 +75,6 @@ public class MainController implements Initializable, DrawCallback {
     }
 
     private void updateSize() {
-        System.out.println(cnvMain.getWidth());
-        System.out.println(cnvMain.getHeight());
         gameManager.updateSize(cnvMain);
     }
 
@@ -115,7 +113,6 @@ public class MainController implements Initializable, DrawCallback {
             do {
                 text = WordUtils.wrap(dialog.getText(), wrapLength);
                 size = getSize(text);
-                System.out.println(size.getWidth() + 350 + " - " + cnvMain.getWidth());
                 wrapLength -= 5;
                 if (wrapLength < 0) break;
             } while (size.getWidth() + 350 >= cnvMain.getWidth());
@@ -139,11 +136,17 @@ public class MainController implements Initializable, DrawCallback {
             gc.strokeRect(menu.getPos().getX(), menu.getPos().getY(), menu.getSize().getX(), menu.getSize().getY());
         } else if (drawable.getItem() instanceof Square) {
             Square square = (Square) drawable.getItem();
-            gc.setStroke(Color.RED);
-            gc.strokeLine(square.getPoint(0).getX(), square.getPoint(0).getY(), square.getPoint(1).getX(), square.getPoint(1).getY());
-            gc.strokeLine(square.getPoint(1).getX(), square.getPoint(1).getY(), square.getPoint(2).getX(), square.getPoint(2).getY());
-            gc.strokeLine(square.getPoint(2).getX(), square.getPoint(2).getY(), square.getPoint(3).getX(), square.getPoint(3).getY());
-            gc.strokeLine(square.getPoint(3).getX(), square.getPoint(3).getY(), square.getPoint(0).getX(), square.getPoint(0).getY());
+            if (square.isInteraction()) {
+                gc.setStroke(Color.GREEN);
+            } else {
+                gc.setStroke(Color.RED);
+            }
+            if (square.getPoint(0) != null) {
+                gc.strokeLine(square.getPoint(0).getX(), square.getPoint(0).getY(), square.getPoint(1).getX(), square.getPoint(1).getY());
+                gc.strokeLine(square.getPoint(1).getX(), square.getPoint(1).getY(), square.getPoint(2).getX(), square.getPoint(2).getY());
+                gc.strokeLine(square.getPoint(2).getX(), square.getPoint(2).getY(), square.getPoint(3).getX(), square.getPoint(3).getY());
+                gc.strokeLine(square.getPoint(3).getX(), square.getPoint(3).getY(), square.getPoint(0).getX(), square.getPoint(0).getY());
+            }
 
         } else if (drawable.getItem() instanceof Point2D) {
             gc.setFill(Color.RED);
