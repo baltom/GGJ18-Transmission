@@ -7,10 +7,10 @@ import lombok.Value;
 public class CharacterTileSettings implements TileMapSettings {
 
     String name;
-    Double height;
-    Double width;
-    Double padding;
-    Boolean entireSheet;
+    double height;
+    double width;
+    double padding;
+    boolean entireSheet;
 
     public CharacterTileSettings(String name) {
         this(name, 0.);
@@ -35,9 +35,9 @@ public class CharacterTileSettings implements TileMapSettings {
     public CharacterTileSettings(String s, boolean cover) {
         this.name = s;
         this.entireSheet = cover;
-        this.padding = null;
-        this.width = null;
-        this.height = null;
+        this.padding = 0.0;
+        this.width = 0.0;
+        this.height = 0.0;
     }
 
     @Override

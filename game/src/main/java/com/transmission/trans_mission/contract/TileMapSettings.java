@@ -10,5 +10,5 @@ public interface TileMapSettings {
 
     double getPadding();
 
-    Boolean getEntireSheet();
+    boolean isEntireSheet();
 }

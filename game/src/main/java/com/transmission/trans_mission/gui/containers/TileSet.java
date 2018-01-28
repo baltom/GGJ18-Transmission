@@ -16,7 +16,7 @@ public class TileSet {
     public TileSet(TileMapSettings settings, Double tileScale) {
         tiles = new ArrayList<>();
         Image image = new Image(getClass().getResourceAsStream("/" + settings.name()));
-        if (settings.getEntireSheet()) {
+        if (settings.isEntireSheet()) {
             tiles.add(new Tile(image, tileScale));
         } else {
             PixelReader reader = image.getPixelReader();
