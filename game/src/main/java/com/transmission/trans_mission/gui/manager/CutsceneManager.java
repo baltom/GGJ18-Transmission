@@ -5,19 +5,21 @@ import com.transmission.trans_mission.gui.containers.TileDrawable;
 import com.transmission.trans_mission.gui.containers.TileSet;
 import javafx.geometry.Point2D;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 public class CutsceneManager {
 
-    private List<TileSet> cutscenes;
+    public static final int START_SCENE = 0;
+    public static final int INTRO_SCENE = 1;
 
-    public CutsceneManager(TileSet... tileSet) {
-        cutscenes = Arrays.asList(tileSet);
+    private HashMap<Integer, TileSet> cutscenes;
+
+    public CutsceneManager() {
+        cutscenes = new HashMap<>();
     }
 
     public void playCutscene(int i, long speed, DrawTileCallback callback) throws InterruptedException {
-        if (cutscenes.size() > i) {
+        if (cutscenes.get(i) != null) {
             TileSet tileSet = cutscenes.get(i);
             for (int step = 0; step < tileSet.getTileCount(); step++) {
                 callback.draw(new TileDrawable(null, new Point2D(0, 0), tileSet.getTile(step).getImage()));
@@ -26,5 +28,9 @@ public class CutsceneManager {
         } else {
             System.out.println("Incorrect");
         }
+    }
+
+    public void addCutscene(int introScene, TileSet tileSet) {
+        cutscenes.put(introScene, tileSet);
     }
 }

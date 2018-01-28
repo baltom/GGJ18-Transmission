@@ -33,7 +33,7 @@ public class GameLoopManager {
     private boolean hasDoneInitialRender = false;
     private List<TileSet> backgroundTiles;
     private HashMap<Integer, BoundsMap> boundsHashMap;
-    private boolean drawBoundsMap = true;
+    private boolean drawBoundsMap = false;
     private CharacterContainer character;
 
     public GameLoopManager(DialogManager dialogManager) {
