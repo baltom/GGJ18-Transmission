@@ -47,7 +47,7 @@ public class MainController implements Initializable, DrawCallback {
         pane.widthProperty().addListener((e) -> updateSize());
         pane.heightProperty().addListener((e) -> updateSize());
 
-        gameManager = new GameManager(cnvMain);
+        gameManager = new GameManager(cnvMain, scene);
 
         Service<Void> service = new Service<Void>() {
             @Override
@@ -173,6 +173,7 @@ public class MainController implements Initializable, DrawCallback {
     }
 
     public void setScene(Scene scene) {
+        this.gameManager.setScene(scene);
         this.scene = scene;
     }
 }

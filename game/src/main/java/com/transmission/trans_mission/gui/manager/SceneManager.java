@@ -114,9 +114,9 @@ public class SceneManager {
     public Double getCharacterScale() {
         switch (currentScene) {
             case TRAIN_SCENE:
-                return 3.;
+                return 7.;
             case TOILET_SCENE:
-                return 4.;
+                return 18.;
         }
         return 3.;
     }
@@ -124,9 +124,9 @@ public class SceneManager {
     public Point2D getCharacterPos() {
         switch (currentScene) {
             case TRAIN_SCENE:
-                return new Point2D(0, 0);
+                return new Point2D(150., 450.);
             case TOILET_SCENE:
-                return new Point2D(3., 485.);
+                return new Point2D(-300., 250.);
         }
         return new Point2D(0, 0);
     }
@@ -134,9 +134,9 @@ public class SceneManager {
     public int getCurrentMaxRange() {
         switch (currentScene) {
             case TRAIN_SCENE:
-                return 100;
+                return 250;
             case TOILET_SCENE:
-                return 650;
+                return 450;
             case MURDER_SCENE:
             case PUBE_SCENE:
                 return 1300;

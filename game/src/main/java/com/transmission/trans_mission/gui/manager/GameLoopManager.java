@@ -64,22 +64,20 @@ public class GameLoopManager {
             if (playCutscene && cutscene != null) {
                 cutscene.playCutscene(cutSceneNum, 200, callback);
                 playCutscene = false;
-                sceneManager.updateScene(TOILET_SCENE);
+                changeScene(TOILET_SCENE);
             } else {
                 long now = System.nanoTime();
                 long updateLength = now - lastLoopTime;
                 lastLoopTime = now;
                 double delta = updateLength / ((double) OPTIMAL_TIME);
-
                 lastFpsTime += updateLength;
                 fps++;
 
                 if (lastFpsTime >= 1_000_000_000) {
-                    System.out.println("(FPS: " + fps + ")");
+                    //System.out.println("(FPS: " + fps + ")");
                     lastFpsTime = 0;
                     fps = 0;
                 }
-
                 doGameUpdates(delta);
                 render(callback);
                 Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1_000_000);
@@ -117,14 +115,8 @@ public class GameLoopManager {
         }
     }
 
-    public void setDoARender(boolean doARender) {
-        if (doARender) {
-            this.doARender = true;
-        }
-    }
-
     private void doGameUpdates(double delta) {
-        gameLogic.forEach(logic -> setDoARender(logic.gameLogic(delta)));
+        gameLogic.forEach(logic -> logic.gameLogic(delta));
     }
 
     public boolean isGameRunning() {

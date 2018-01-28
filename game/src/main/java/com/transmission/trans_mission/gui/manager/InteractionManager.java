@@ -42,6 +42,7 @@ public class InteractionManager {
         Optional<Interaction> any = interactions.stream()
                 .filter(Interaction::isEnabled)
                 .filter(p -> {
+                    if (playerPos == null) return true;
                     boolean b = mouseClick.distance(playerPos) <= maxDistance;
                     if (!b) {
                         System.out.println("Too far ( " + mouseClick.distance(playerPos) + ")");

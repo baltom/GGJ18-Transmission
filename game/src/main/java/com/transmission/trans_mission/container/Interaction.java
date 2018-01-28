@@ -24,5 +24,4 @@ public class Interaction {
         }
         return this;
     }
-
 }

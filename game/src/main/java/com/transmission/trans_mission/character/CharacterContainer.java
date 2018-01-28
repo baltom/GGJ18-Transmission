@@ -36,13 +36,14 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private BoundsMap boundsMap;
     private boolean doPositionMove;
     private boolean shouldRender = true;
+    private Point2D newPos;
 
     public CharacterContainer(@NonNull TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
         this.velocity = velocity;
         this.pos = pos;
         this.flipManager = new FlipManager(tileSet.getTile(0).getWidth());
-
+        target = pos;
         setMoving(false);
     }
 
@@ -50,6 +51,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     public boolean gameLogic(double delta) {
         if (doPositionMove) {
             doPositionMove = false;
+            pos = newPos;
+            target = newPos;
         } else {
             if (isMoving()) {
                 animation.setAnimationLength(2);
@@ -224,8 +227,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     }
 
     public void setPos(Point2D characterPos) {
-        System.out.println("Pos change: " + characterPos);
         doPositionMove = true;
+        newPos = characterPos;
         pos = characterPos;
         target = null;
     }

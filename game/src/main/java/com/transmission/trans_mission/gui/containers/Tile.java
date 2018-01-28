@@ -76,6 +76,6 @@ public class Tile {
 
     public void setScale(Double scale) {
         this.scale = scale;
-        this.image = resample(this.image, scale);
+        this.image = resample(this.originalImage, scale);
     }
 }
