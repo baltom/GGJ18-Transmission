@@ -37,7 +37,7 @@ public class TileManager {
             case GAME_START:
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior10x.png", true));
                 loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground10x.png", true));
-                loadTileMap(new CharacterTileSettings("character.png"));
+                loadTileMap(new CharacterTileSettings("SkirtlookHolmes.png", 31., 31.));
                 loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
         }
     }

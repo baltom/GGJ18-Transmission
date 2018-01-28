@@ -42,7 +42,11 @@ public class Tile {
                 final int argb = reader.getArgb(x, y);
                 for (int dy = 0; dy < S; dy++) {
                     for (int dx = 0; dx < S; dx++) {
-                        writer.setArgb((int) (x * S + dx), (int) (y * S + dy), argb);
+                        try {
+                            writer.setArgb((int) (x * S + dx), (int) (y * S + dy), argb);
+                        } catch (IndexOutOfBoundsException e) {
+
+                        }
                     }
                 }
             }

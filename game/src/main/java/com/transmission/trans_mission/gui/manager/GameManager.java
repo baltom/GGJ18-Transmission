@@ -40,7 +40,7 @@ public class GameManager {
         gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior10x").setScale(1.));
         gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground10x").setScale(1.));
 
-        character = new CharacterContainer(tileManager.getTileSet("character"), 2., new Point2D(400, 600));
+        character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(350, 525));
         gameLoopManager.setCharacter(character);
 
         gameLoopManager.addGameLogicItem(character);

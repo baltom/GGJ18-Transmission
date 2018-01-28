@@ -1,5 +1,6 @@
 package com.transmission.trans_mission.character;
 
+import com.sun.istack.internal.NotNull;
 import com.transmission.trans_mission.container.BoundsMap;
 import com.transmission.trans_mission.container.Pos;
 import com.transmission.trans_mission.contract.DrawTileCallback;
@@ -23,7 +24,7 @@ import static com.transmission.trans_mission.character.MovementDirection.*;
 
 public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
-    private final TileAnimation animation;
+    private TileAnimation animation;
     private TileSet tileSet;
     private Double velocity;
     private Point2D pos;
@@ -34,19 +35,19 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private List<Point2D> allowedPoints;
     private BoundsMap boundsMap;
 
-    public CharacterContainer(TileSet tileSet, Double velocity, Point2D pos) {
+    public CharacterContainer(@NotNull TileSet tileSet, Double velocity, Point2D pos) {
         this.tileSet = tileSet;
         this.velocity = velocity;
         this.pos = pos;
         this.flipManager = new FlipManager(tileSet.getTile(0).getWidth());
 
-        animation = new TileAnimation(Duration.millis(500), 3);
-        animation.setCycleCount(Animation.INDEFINITE);
+        setMoving(false);
     }
 
     @Override
     public boolean gameLogic(double delta) {
         if (isMoving()) {
+            animation.setAnimationLength(2);
             animation.play();
             Point2D posOffset;
             if (flipManager.isFlipped()) {
@@ -65,7 +66,7 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
             }
             return true;
         } else {
-            animation.pause();
+            animation.play();
         }
         return false;
     }
@@ -88,49 +89,40 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
 
     @Override
     public void render(DrawTileCallback gc) {
-            Tile currentTile = getCurrentTile();
-        Point2D size;
-        if (flipManager.isFlipped()) {
-            size = new Point2D(-currentTile.getWidth(), currentTile.getHeight());
-        } else {
-            size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
-            }
+        Tile currentTile = getCurrentTile();
+        Point2D size = new Point2D(currentTile.getWidth(), currentTile.getHeight());
         gc.draw(new TileDrawable(size, pos, currentTile.getImage()));
     }
 
     private Tile getCurrentTile() {
-        MovementDirection dir = getCurrentDirection();
-        switch (dir) {
-            case NORTH:
-                animation.setOffset(6);
-                break;
-            case SOUTH:
-                animation.setOffset(3);
-                break;
-            case EAST:
-                if (!flipManager.isFlipped()) {
-                    flipManager.setShouldFlip(true);
-                }
-                animation.setOffset(0);
-                break;
-            case WEST:
-                if (flipManager.isFlipped()) {
-                    flipManager.setShouldFlip(true);
-                }
-                animation.setOffset(0);
-                break;
-            case NORTH_EAST:
-                animation.setOffset(6);
-                break;
-            case NORTH_WEST:
-                animation.setOffset(6);
-                break;
-            case SOUTH_EAST:
-                animation.setOffset(3);
-                break;
-            case SOUTH_WEST:
-                animation.setOffset(3);
-                break;
+        if (isMoving()) {
+            MovementDirection dir = getCurrentDirection();
+            switch (dir) {
+                case NORTH:
+                    animation.setOffset(29);
+                    break;
+                case SOUTH:
+                    animation.setOffset(27);
+                    break;
+                case EAST:
+                    animation.setOffset(25);
+                    break;
+                case WEST:
+                    animation.setOffset(23);
+                    break;
+                case NORTH_EAST:
+                    animation.setOffset(25);
+                    break;
+                case NORTH_WEST:
+                    animation.setOffset(23);
+                    break;
+                case SOUTH_EAST:
+                    animation.setOffset(27);
+                    break;
+                case SOUTH_WEST:
+                    animation.setOffset(27);
+                    break;
+            }
         }
         return tileSet.getTile(animation.getLastIndex());
     }
@@ -192,6 +184,13 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     }
 
     public void setMoving(boolean moving) {
+        if (!moving) {
+            animation = new TileAnimation(Duration.millis(200 * 22), 22);
+            animation.setCycleCount(Animation.INDEFINITE);
+        } else {
+            animation = new TileAnimation(Duration.millis(200 * 2), 2);
+            animation.setCycleCount(Animation.INDEFINITE);
+        }
         this.moving = moving;
     }
 

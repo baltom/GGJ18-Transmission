@@ -33,4 +33,8 @@ public class TileAnimation extends Transition {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
+    public void setAnimationLength(int animationLength) {
+        this.animationLength = animationLength;
+    }
 }
