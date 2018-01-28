@@ -40,7 +40,7 @@ public class InteractionManager {
         List<Interaction> interactions = this.interactions.getOrDefault(map, new ArrayList<>());
         if (interactions.isEmpty()) return Optional.empty();
         Optional<Interaction> any = interactions.stream()
-                .filter(Interaction::getEnabled)
+                .filter(Interaction::isEnabled)
                 .filter(p -> mouseClick.distance(playerPos) <= 100)
                 .filter(interaction -> interaction.getPolygon().contains(mouseClick)).findAny();
         return any.map(Interaction::getEvent);

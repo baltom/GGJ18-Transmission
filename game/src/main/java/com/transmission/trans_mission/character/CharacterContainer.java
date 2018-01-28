@@ -1,6 +1,5 @@
 package com.transmission.trans_mission.character;
 
-import com.sun.istack.internal.NotNull;
 import com.transmission.trans_mission.container.BoundsMap;
 import com.transmission.trans_mission.container.Pos;
 import com.transmission.trans_mission.contract.DrawTileCallback;
@@ -18,6 +17,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.transmission.trans_mission.character.MovementDirection.*;
@@ -35,7 +35,8 @@ public class CharacterContainer implements GameLogicCallback, RenderCallback {
     private List<Point2D> allowedPoints;
     private BoundsMap boundsMap;
 
-    public CharacterContainer(@NotNull TileSet tileSet, Double velocity, Point2D pos) {
+    public CharacterContainer(TileSet tileSet, Double velocity, Point2D pos) {
+        Objects.requireNonNull(tileSet);
         this.tileSet = tileSet;
         this.velocity = velocity;
         this.pos = pos;
