@@ -7,13 +7,16 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 
+import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_MENU_THEME;
+import static com.transmission.trans_mission.gui.manager.MusicManager.MAIN_THEME;
+
 public class GameManager {
 
     public final static int CUTSCENE_START = 0;
     public final static int MAIN_MENU_START = 1;
     public final static int GAME_START = 2;
 
-    private final int START_STEP = GAME_START;
+    private final int START_STEP = CUTSCENE_START;
 
     private CharacterContainer character;
     private GameLoopManager gameLoopManager;
@@ -21,8 +24,10 @@ public class GameManager {
     private DialogManager dialogManager;
     private CutsceneManager cutsceneManager;
     private MainMenuManager mainMenuManager;
+    private MusicManager musicManager;
 
     public GameManager(Canvas parent) {
+        musicManager = new MusicManager();
         tileManager = new TileManager();
         tileManager.setTileScale(3.);
         tileManager.loadAllTiles(START_STEP);
@@ -51,6 +56,7 @@ public class GameManager {
         try {
             switch (START_STEP) {
                 case CUTSCENE_START:
+                    musicManager.playSong(MAIN_MENU_THEME);
                     cutsceneManager.playCutscene(0, 100, callback);
                 case MAIN_MENU_START:
                     mainMenuManager.setEnabled(true, callback);
@@ -58,6 +64,7 @@ public class GameManager {
                         Thread.sleep(500);
                     }
                 case GAME_START:
+                    musicManager.playSong(MAIN_THEME);
                     gameLoopManager.startGameLoop(callback);
             }
         } catch (InterruptedException e) {
