@@ -6,11 +6,9 @@ import com.transmission.trans_mission.gui.containers.Tile;
 import com.transmission.trans_mission.gui.containers.TileDrawable;
 import com.transmission.trans_mission.gui.containers.TileSet;
 import javafx.geometry.Point2D;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,14 +37,14 @@ public class SceneManager {
         boundsHashMap = new HashMap<>();
 
         try {
-            String file = FileUtils.readFileToString(new File(getClass().getResource("/" + s).toURI()), Charset.forName("UTF-8"));
+            String file = IOUtils.toString(getClass().getResourceAsStream("/" + s), Charset.forName("UTF-8"));
             Gson gson = new Gson();
             BoundsMap[] boundsMaps = gson.fromJson(file, BoundsMap[].class);
             for (BoundsMap map :
                     boundsMaps) {
                 boundsHashMap.put(map.getId(), map);
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

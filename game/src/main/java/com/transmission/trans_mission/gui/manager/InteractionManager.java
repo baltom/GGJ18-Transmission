@@ -5,12 +5,10 @@ import com.transmission.trans_mission.container.Interaction;
 import com.transmission.trans_mission.contract.DrawTileCallback;
 import com.transmission.trans_mission.gui.containers.Square;
 import javafx.geometry.Point2D;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class InteractionManager {
@@ -22,14 +20,14 @@ public class InteractionManager {
         Gson gson = new Gson();
 
         try {
-            String s = FileUtils.readFileToString(new File(getClass().getResource("/interactions.json").toURI()), StandardCharsets.UTF_8);
+            String s = IOUtils.toString(getClass().getResourceAsStream("/interactions.json"), Charset.forName("UTF-8"));
             Interaction[] inter = gson.fromJson(s, Interaction[].class);
             Arrays.stream(inter).forEach(interaction -> {
                 List<Interaction> list = interactions.getOrDefault(interaction.getMap(), new ArrayList<>());
                 list.add(interaction.init());
                 interactions.put(interaction.getMap(), list);
             });
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
