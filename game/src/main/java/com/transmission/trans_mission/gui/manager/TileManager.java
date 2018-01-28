@@ -31,12 +31,12 @@ public class TileManager {
     public void loadAllTiles(int START_STEP) {
         switch (START_STEP) {
             case CUTSCENE_START:
-                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot10x.png", 64. * 10, 36. * 10));
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Helicoptershot.png", 64., 36.));
             case MAIN_MENU_START:
-                loadTileMap(new CharacterTileSettings("TransSiberian_Train10x.png", 64. * 10, 38. * 10));
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train.png", 64., 36.));
             case GAME_START:
-                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior10x.png", true));
-                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground10x.png", true));
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior.png", true));
+                loadTileMap(new CharacterTileSettings("TransSiberian_Train_Interior_Seats_foreground.png", true));
                 loadTileMap(new CharacterTileSettings("SkirtlookHolmes.png", 31., 31.));
                 loadTileMap(new CharacterTileSettings("heads.jpg", 250., 250.));
         }

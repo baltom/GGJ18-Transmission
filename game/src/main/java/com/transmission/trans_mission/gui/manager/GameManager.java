@@ -34,16 +34,16 @@ public class GameManager {
 
         switch (START_STEP) {
             case CUTSCENE_START:
-                cutsceneManager = new CutsceneManager(tileManager.getTileSet("TransSiberian_Train_Helicoptershot10x").setScale(1.));
+                cutsceneManager = new CutsceneManager(tileManager.getTileSet("TransSiberian_Train_Helicoptershot").setScale(3.));
             case MAIN_MENU_START:
-                mainMenuManager = new MainMenuManager(tileManager.getTileSet("TransSiberian_Train10x").setScale(1.), parent);
+                mainMenuManager = new MainMenuManager(tileManager.getTileSet("TransSiberian_Train").setScale(3.), parent);
             case GAME_START:
                 dialogManager = new DialogManager(parent, tileManager.getTileSet("heads"));
         }
 
         gameLoopManager = new GameLoopManager(dialogManager);
-        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior10x").setScale(1.));
-        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground10x").setScale(1.));
+        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior").setScale(3.));
+        gameLoopManager.addBackgroundTileSet(tileManager.getTileSet("TransSiberian_Train_Interior_Seats_foreground").setScale(3.));
 
         character = new CharacterContainer(tileManager.getTileSet("SkirtlookHolmes").setScale(2), 2.5, new Point2D(350, 525));
         gameLoopManager.setCharacter(character);
